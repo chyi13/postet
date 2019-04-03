@@ -16,7 +16,7 @@
                     <div class="panel-body">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#home" data-toggle="tab">预览</a>
+                            <li class="active"><a href="#home" data-toggle="tab" @click="crossRequest">预览</a>
                             </li>
                             <li><a href="#profile" data-toggle="tab">编辑</a>
                             </li>
@@ -53,6 +53,18 @@
         name: 'Preview',
         props: {
             msg: String
+        },
+        methods: {
+            crossRequest() {
+                console.log('windowww', window);
+                crossRequest({
+                    url: 'http://ceshiai.iwencai.com/screenshot/',
+                    method: 'GET',
+                    success: function(res, header){
+                        console.log('result', res, header);
+                    }
+                })
+            }
         }
     }
 </script>
