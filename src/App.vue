@@ -21,35 +21,11 @@
             </div>
         </header>
         <!-- Icons Grid -->
-        <section class="features-icons bg-light text-center">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex">
-                                <i class="icon-screen-desktop m-auto text-primary"></i>
-                            </div>
-                            <h3>Fully Responsive</h3>
-                            <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex">
-                                <i class="icon-layers m-auto text-primary"></i>
-                            </div>
-                            <h3>Bootstrap 4 Ready</h3>
-                            <p class="lead mb-0">Featuring the latest build of the new Bootstrap 4 framework!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="features-icons-item mx-auto mb-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex">
-                                <i class="icon-check m-auto text-primary"></i>
-                            </div>
-                            <h3>Easy to Use</h3>
-                            <p class="lead mb-0">Ready to use with your own content, or customize the source files!</p>
-                        </div>
+        <section class="features-icons bg-light">
+            <div class="container-fluid main-container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <Edit></Edit>
                     </div>
                 </div>
             </div>
@@ -83,11 +59,11 @@
     };
 </script>
 <style>
-    #app {
+    #wrapper {
         font-family: "Avenir", Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        text-align: center;
+        text-align: left;
         color: #2c3e50;
     }
     .modal-lg {

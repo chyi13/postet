@@ -49,21 +49,4 @@
     a {
         color: #42b983;
     }
-
-    .vue-codemirror {
-        height: auto;
-        border: 1px solid silver;
-    }
-
-    .CodeMirror-empty {
-        outline: 1px solid #c22;
-    }
-
-    .CodeMirror-empty.CodeMirror-focused {
-        outline: none;
-    }
-
-    .CodeMirror pre.CodeMirror-placeholder {
-        color: #999;
-    }
 </style>
