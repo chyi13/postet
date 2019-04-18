@@ -40,6 +40,9 @@
 
     export default {
         name: "home",
+        created() {
+            this.$store.dispatch('UPDATE_API_IDS');
+        },
         data() {
             return {
                 tabSelected: "preview",
