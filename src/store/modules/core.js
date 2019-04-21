@@ -15,7 +15,25 @@ const core = {
     },
     actions: {
         async UPDATE_API_IDS({commit}) {
-            const apiIds = await fetchTestApiIds();
+            // const apiIds = await fetchTestApiIds();
+            const apiIds = [  {
+                name: '测试1',
+            },
+                {
+                    name: '测试2',
+                },
+                {
+                    name: '测试3',
+                },
+                {
+                    name: '测试5',
+                },
+                {
+                    name: '测试123',
+                },
+                {
+                    name: '测试1',
+                },]
             commit('SET_API_IDS', apiIds);
         },
         async UPDATE_TEST_CASES({commit, state}) {
