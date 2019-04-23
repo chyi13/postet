@@ -1,16 +1,32 @@
 import {TEST_API_URL, TEST_CASES_URL} from '../constants';
-import { fetchByAjax } from '../utils';
+import { fetchByAjax, fetchByCrossRequest } from '../utils';
 
 /**
  * fetch test cases by api id
  * @param {*} apiId 
  */
-export async function fetchTestCases(apiId) {
-    const result = [];
+export async function fetchAPICases(apiId) {
+    let apiCases = [];
     let pageId = 0;
+    let url = TEST_CASES_URL;
     while(true) {
-        const tempResult = await fetchTestCasesByPage(0);
+        try {
+            url = TEST_CASES_URL + '?api=' + apiId + '&page_size=500&pageId=' + pageId;
+            const result = await fetchDelegate(url);
+            if (result && Array.isArray(result.results)) {
+                apiCases = apiCases.concat(result.results);
+                if (!result.next) {
+                    break;
+                } else {
+                    pageId++;
+                }
+            } else {
+               break;
+            }
+        } catch(e) {
+        }
     }
+    return apiCases;
 }
 
 /**
@@ -19,29 +35,31 @@ export async function fetchTestCases(apiId) {
 export async function fetchTestApiIds() {
     let url = TEST_API_URL;
     let apis = [];
-    let pageId = 0;
+    let pageId = 1;
     while(true) {
         try {
             url = TEST_API_URL + '?page=' + pageId + '&page_size=500';
-            const result = await fetchByPage(url);
+            const result = await fetchDelegate(url);
             if (result && Array.isArray(result.results)) {
-                apis.push(result.results);
+                apis = apis.concat(result.results);
                 if (!result.next) {
                     break;
+                } else {
+                    pageId++;
                 }
             } else {
-                break;
+               break;
             }
         } catch(e) {}
     }
     return apis;
 }
 
-async function fetchByPage(url) {
+async function fetchDelegate(url) {
     try {
-        const result = await fetchByAjax(url);
-        if (result && Array.isArray(result.results)) {
-            return result;
+        const result = await fetchByCrossRequest(url);
+        if (result && result.body && JSON.parse(result.body)) {
+            return JSON.parse(result.body);
         }
     } catch(e) {
         return null;

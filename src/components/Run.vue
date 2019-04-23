@@ -4,73 +4,48 @@
       <!-- Default Card Example -->
       <div class="card mb-4">
         <div class="card-header">
-           <h6 class="m-0 font-weight-bold text-primary">接口</h6>
+          <h6 class="m-0 font-weight-bold text-primary">接口</h6>
         </div>
         <div class="card-body">
           <div class="form-row">
-            <div class="col-md-11 mb-2 input-group">
+            <div class="col-md-10 mb-2 input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">GET</span>
+                  <select
+                    id="methods_selector"
+                    class="form-control"
+                  >
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
               </div>
+              <div class="col-md-10">
               <select
                 id="run_selector"
                 data-live-search="true"
-                class="form-control form-control-lg"
+                class="form-control"
               >
-                <optgroup label="Climbing">
-                  <option value="pitons">Pitons</option>
-                  <option value="cams">Cams</option>
-                  <option value="nuts">Nuts</option>
-                  <option value="bolts">Bolts</option>
-                  <option value="stoppers">Stoppers</option>
-                  <option value="sling">Sling</option>
-                </optgroup>
-                <optgroup label="Skiing" disabled>
-                  <option value="skis">Skis</option>
-                  <option value="skins">Skins</option>
-                  <option value="poles">Poles</option>
-                </optgroup>
+                <option v-for="(item, index) in apiCases" :key="index" :value="item.id">{{item.name}}</option>
               </select>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-block btn-primary" @click="send">post</button>
+            </div>
+             <div class="col-md-1">
+              <button class="btn btn-block btn-primary" @click="send">add</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <div class="col-lg-12 col-md-9">
-    <div class="form-row">
-      <div class="col-md-11 mb-2 input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">GET</span>
-        </div>
-        <div class="input-group">
-          <div class="col-md-9">
-            <select id="run_selector" data-live-search="true" class="form-control form-control-lg">
-              <optgroup label="Climbing">
-                <option value="pitons">Pitons</option>
-                <option value="cams">Cams</option>
-                <option value="nuts">Nuts</option>
-                <option value="bolts">Bolts</option>
-                <option value="stoppers">Stoppers</option>
-                <option value="sling">Sling</option>
-              </optgroup>
-              <optgroup label="Skiing" disabled>
-                <option value="skis">Skis</option>
-                <option value="skins">Skins</option>
-                <option value="poles">Poles</option>
-              </optgroup>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <button class="btn btn-block btn-lg btn-primary" @click="send">Send!</button>
-      </div>
-    </div>
-  </div>-->
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "Run",
   created() {},
@@ -79,35 +54,37 @@ export default {
       url: ""
     };
   },
-  methods: {
-    send() {
-      this.$store.dispatch("DO_REQUEST", { url: this.url });
+  computed: {
+    ...mapGetters(["apiCases"])
+  },
+  watch: {
+    apiCases: function(newValue, oldValue) {
+      if (Array.isArray(newValue)) {
+        this.$store.dispatch('UPDATE_SELECT_API_CASE', newValue[0].id);
+        this.$nextTick(() => {
+          $("#run_selector").selectpicker("refresh");
+        });
+      }
     }
   },
+  methods: {
+    send() {
+      this.$store.dispatch("DO_REQUEST", { id:  $("#run_selector").val() });
+    },
+  },
   mounted() {
+    $("#methods_selector").selectpicker();
     $("#run_selector").selectpicker();
     $("#api_selector").selectpicker();
+    let context = this;
+    $('#run_selector').on('changed.bs.select', function (e, clickedIndex, isSelected, newValue, previousValue) {
+      context.$store.dispatch('UPDATE_SELECT_API_CASE', $('#run_selector').val());
+    });
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
 </style>
