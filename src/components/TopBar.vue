@@ -2,6 +2,17 @@
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <!-- Nav Item - User Information -->
     <!-- Topbar Navbar -->
+    <!-- Topbar Search -->
+    <div
+      class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+    >
+      <a href="./assets/postet_extension0.1.zip" target="_blank"  class="btn btn-secondary btn-icon-split">
+        <span class="icon text-white-50">
+          <i class="fas fa-download"></i>
+        </span>
+        <span class="text">Chrome Extension</span>
+      </a>
+    </div>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown no-arrow">
         <a

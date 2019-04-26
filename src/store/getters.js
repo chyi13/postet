@@ -1,5 +1,6 @@
 const getters = {
     apiIds: state => state.core.apiIds,
+    apiIdsDummy: state => state.core.apiIdsDummy,
     selectedApi: state => state.core.selectedApi,
     apiCases: state => state.core.apiCases,
     selectedApiCase: state => state.core.selectedApiCase,

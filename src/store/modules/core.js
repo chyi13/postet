@@ -3,6 +3,7 @@ import { fetchTestApiIds, fetchAPICases } from "../../core/core";
 const core = {
     state: {
         apiIds: [],
+        apiIdsDummy: [],
         apiCases: [],
         selectedApi: null,
         selectedApiCase: null,
@@ -10,6 +11,7 @@ const core = {
     mutations: {
         SET_API_IDS(state, apiIds) {
             state.apiIds = apiIds;
+            state.apiIdsDummy = [...apiIds];
         },
         SET_SELECTED_API(state, selectedApi) {
             state.selectedApi = selectedApi;
@@ -40,7 +42,14 @@ const core = {
             });
             console.log('targetAPICase', targetAPICase);
             commit('SET_SELECTED_API_CASE', targetAPICase);
-        }
+        },
+        FILTER_API_CASES({commit, state}, searchStr) {
+            if (searchStr) {
+                state.apiIdsDummy = state.apiIds.filter((item) => item.name.indexOf(searchStr) > -1)
+            } else {
+                state.apiIdsDummy = [...state.apiIds];
+            }
+        },
     }
 };
 

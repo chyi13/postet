@@ -8,11 +8,9 @@ const run = {
     },
     mutations: {
         SHOW_RESULT(state) {
-            document.body.className += "modal-open";
             state.showResult = true;
         },
         HIDE_RESULT(state) {
-            document.body.className = document.body.className.replace("modal-open", '');
             state.showResult = false;
         }
     },

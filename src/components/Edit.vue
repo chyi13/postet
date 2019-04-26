@@ -5,12 +5,12 @@
         <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
       </div>
       <div class="card-body">
+         <div class="mb-1 small">接口名称:</div>
+        <p>{{selectedApiCase.name}}</p>
         <div class="mb-1 small">创建时间:</div>
         <p>{{selectedApiCase.create_time}}</p>
-        <div class="mb-1 small">接口名称:</div>
-        <p>{{selectedApiCase.name}}</p>
         <div class="mb-1 small">路径:</div>
-        <p>{{selectedApi.url}}</p>
+        <input :value="selectedApi.url"/>
       </div>
     </div>
     <div class="card shadow mb-4">
@@ -53,16 +53,22 @@
       </div>
       <div class="card-body"></div>
     </div>
+    <Result v-if="showResult"></Result>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
+import Result from './Result';
+
 export default {
   name: "Edit",
+  components: {
+    Result
+  },
   computed: {
-    ...mapGetters(["selectedApi", "selectedApiCase"]),
+    ...mapGetters(["selectedApi", "selectedApiCase", "showResult"]),
     headers() {
         let result = '';
       try {

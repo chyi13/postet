@@ -1,8 +1,5 @@
 <template>
-  <ul
-    class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-    id="accordionSidebar"
-  >
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="fas fa-laugh-wink"></i>
@@ -13,21 +10,26 @@
       </div>
     </a>
     <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        href="#"
-        data-toggle="collapse"
-        data-target="#collapseTwo"
-        aria-expanded="true"
-        aria-controls="collapseTwo"
-      >
-        <i class="fas fa-fw fa-cog"></i>
-        <span>APIs</span>
-      </a>
+      <div class="input-group col-lg-12">
+        <input
+          type="text"
+          class="form-control bg-light border-0 small"
+          placeholder="Search for..."
+          aria-label="Search"
+          aria-describedby="basic-addon2"
+          v-model="apiSearchInput"
+          @input="onSearchInputChange"
+        >
+        <div class="input-group-append">
+          <button class="btn btn-info" type="button">
+            <i class="fas fa-search fa-sm"></i>
+          </button>
+        </div>
+      </div>
     </li>
-    <li v-for="(item, index) in apiIds" class="list_item_container" :key="index">
+    <li v-for="(item, index) in apiIdsDummy" class="list_item_container" :key="index">
       <div class="bg-white py-2 collapse-inner">
-        <div class="list_item_inner" @click="onAPIClicked(item)">{{item.name}}</div>
+        <div class="list_item_inner truncate" @click="onAPIClicked(item)">{{item.name}}</div>
       </div>
     </li>
   </ul>
@@ -38,12 +40,20 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "api-list",
+  data() {
+    return {
+      apiSearchInput: ''
+    }
+  },
   computed: {
-    ...mapGetters(["apiIds"])
+    ...mapGetters(["apiIdsDummy"])
   },
   methods: {
     onAPIClicked(item) {
       this.$store.dispatch("UPDATE_API_CASES", item);
+    },
+    onSearchInputChange() {
+      this.$store.dispatch("FILTER_API_CASES", this.apiSearchInput);
     }
   }
 };
@@ -51,7 +61,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .list_item_container {
   margin: 0 1rem;
 }
@@ -68,5 +77,11 @@ export default {
 }
 .list_item_inner:hover {
   background-color: #eaecf4;
+  cursor: pointer;
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

@@ -31,10 +31,15 @@
               </div>
             </div>
             <div class="col-md-1">
-              <button class="btn btn-block btn-primary" @click="send">post</button>
-            </div>
-             <div class="col-md-1">
-              <button class="btn btn-block btn-primary" @click="send">add</button>
+              <div class="row">
+              <button class="btn btn-primary" @click="send">
+                  <i class="fas fa-paper-plane fa-sm"></i>
+                </button>
+
+              <button class="btn btn-primary" @click="send">
+                 <i class="fas fa-plus fa-sm"></i>
+              </button>
+              </div>
             </div>
           </div>
         </div>
