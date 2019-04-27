@@ -32,10 +32,9 @@
             </div>
             <div class="col-md-1">
               <div class="row">
-              <button class="btn btn-primary" @click="send">
+              <button class="btn btn-primary mr-2" @click="send">
                   <i class="fas fa-paper-plane fa-sm"></i>
                 </button>
-
               <button class="btn btn-primary" @click="send">
                  <i class="fas fa-plus fa-sm"></i>
               </button>

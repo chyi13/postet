@@ -5,12 +5,12 @@
         <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
       </div>
       <div class="card-body">
-         <div class="mb-1 small">接口名称:</div>
+        <div class="mb-1 small">接口名称:</div>
         <p>{{selectedApiCase.name}}</p>
         <div class="mb-1 small">创建时间:</div>
         <p>{{selectedApiCase.create_time}}</p>
         <div class="mb-1 small">路径:</div>
-        <input :value="selectedApi.url"/>
+        <input class="form-control col-lg-10" :value="selectedApi.url">
       </div>
     </div>
     <div class="card shadow mb-4">
@@ -22,11 +22,37 @@
           <form role="form">
             <div class="form-group">
               <label>Headers</label>
-              <input class="form-control" placeholder="Enter text" v-model="headers">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in headers" :key="index">
+                    <td>
+                      <input class="form-control" :value="item.key"/>
+                    </td>
+                    <td>
+                      <input class="form-control" :value="item.value"/>
+                    </td>
+                    <td>
+                      <button class="btn btn-danger mr-2">
+                        <i class="fas fa-minus-circle"></i>
+                      </button>
+                      <button class="btn btn-info">
+                        <i class="fas fa-plus fa-sm"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div class="form-group">
               <label>Params</label>
-              <table class="table table-bordered table-striped">
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th>Key</th>
@@ -60,7 +86,7 @@
 <script>
 import { mapGetters } from "vuex";
 
-import Result from './Result';
+import Result from "./Result";
 
 export default {
   name: "Edit",
@@ -70,12 +96,21 @@ export default {
   computed: {
     ...mapGetters(["selectedApi", "selectedApiCase", "showResult"]),
     headers() {
-        let result = '';
+      let result = [];
       try {
-          result = JSON.parse(this.selectedApiCase.headers);
-        return Object.keys(result).length === 0 ? "" : result;
-      } catch (e) {}
-      return "";
+        let header = JSON.parse(
+          this.selectedApi.header.header.replace(/'/g, '"')
+        );
+        for (let [key, value] of Object.entries(header)) {
+          result.push({
+            key,
+            value
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      return result;
     },
     params() {
       let result = [];

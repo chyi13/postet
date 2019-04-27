@@ -10,7 +10,7 @@
       </div>
     </a>
     <li class="nav-item">
-      <div class="input-group col-lg-12">
+      <div class="mb-3 input-group col-lg-12">
         <input
           type="text"
           class="form-control bg-light border-0 small"
