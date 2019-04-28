@@ -6,7 +6,11 @@
     <div
       class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
     >
-      <a href="./assets/postet_extension0.1.zip" target="_blank"  class="btn btn-secondary btn-icon-split">
+      <a
+        href="./assets/postet_extension0.1.zip"
+        target="_blank"
+        class="btn btn-secondary btn-icon-split"
+      >
         <span class="icon text-white-50">
           <i class="fas fa-download"></i>
         </span>
@@ -25,10 +29,7 @@
           aria-expanded="false"
         >
           <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-          <img
-            class="img-profile rounded-circle"
-            src="https://source.unsplash.com/QAB-WJcbgJk/60x60"
-          >
+          <img class="img-profile rounded-circle" >
         </a>
         <!-- Dropdown - User Information -->
         <div
@@ -59,5 +60,10 @@
 </template>
 <script>
 export default {
-  name: "top-bar"
+  name: "top-bar",
+  data() {
+    return {
+      publicPath: process.env.BASE_URL
+    };
+  }
 };

@@ -5,11 +5,13 @@
  * @param data
  * @returns {Promise}
  */
-export async function fetchByCrossRequest(url, method = 'GET', data) {
+export async function fetchByCrossRequest(url, method = 'GET', headers = {}, data = {}) {
     return new Promise(function(resolve, reject){
         crossRequest({
             url,
             method: method,
+            headers,
+            data,
             success: function (body, header) {
                 resolve({
                     body,
@@ -29,10 +31,11 @@ export async function fetchByCrossRequest(url, method = 'GET', data) {
  * @param {*} method 
  * @param {*} data 
  */
-export async function fetchByAjax(url, method = 'GET', data) {
+export async function fetchByAjax(url, method = 'GET', headers = {}, data) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: url,
+            headers,
             type: method,
             data: data,
             dataType: 'json',

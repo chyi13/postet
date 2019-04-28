@@ -1,11 +1,13 @@
 <template>
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
-    </div>
-    <div class="card-body">
-      <json-viewer :value="jsonHeader" :expand-depth="5" copyable boxed sort></json-viewer>
-      <json-viewer :value="jsonBody" :expand-depth="5" copyable boxed sort></json-viewer>
+  <div class="card shadow mb-4" id="runningResult">
+    <div v-if="showResult">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Reponse</h6>
+      </div>
+      <div class="card-body">
+        <json-viewer :value="jsonHeader" :expand-depth="5" copyable boxed sort></json-viewer>
+        <json-viewer :value="jsonBody" :expand-depth="5" copyable boxed sort></json-viewer>
+      </div>
     </div>
   </div>
 </template>
@@ -23,12 +25,12 @@ export default {
     JsonViewer
   },
   computed: {
-    ...mapGetters(["showResult", "resultHeader", "resultBody"]),
+    ...mapGetters(["showResult", "resultHeaders", "resultBody"]),
     jsonHeader() {
-      if (isJSON(this.resultHeader)) {
-        return JSON.parse(this.resultHeader);
+      if (isJSON(this.resultHeaders)) {
+        return JSON.parse(this.resultHeaders);
       } else {
-        return this.resultHeader;
+        return this.resultHeaders;
       }
     },
     jsonBody() {

@@ -40,7 +40,6 @@ const core = {
             const targetAPICase = apiCases.find((item) => {
                 return Number(item.id) === Number(selectedApiCaseId);
             });
-            console.log('targetAPICase', targetAPICase);
             commit('SET_SELECTED_API_CASE', targetAPICase);
         },
         FILTER_API_CASES({commit, state}, searchStr) {

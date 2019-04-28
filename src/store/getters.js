@@ -5,7 +5,9 @@ const getters = {
     apiCases: state => state.core.apiCases,
     selectedApiCase: state => state.core.selectedApiCase,
     showResult: state => state.run.showResult,
-    resultHeader: state => state.run.header,
+    requestHeaders: state => state.edit.headers, 
+    requestParams: state => state.edit.params,
+    resultHeaders: state => state.run.headers,
     resultBody: state => state.run.body,
 };
 

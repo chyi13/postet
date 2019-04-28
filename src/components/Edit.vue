@@ -25,26 +25,21 @@
               <table class="table table-bordered">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Key</th>
                     <th>Value</th>
-                    <th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in headers" :key="index">
                     <td>
-                      <input class="form-control" :value="item.key"/>
+                        <input type="checkbox" class="form-control" v-model="item.checked" @input="onHeaderChecked(item)">
                     </td>
                     <td>
-                      <input class="form-control" :value="item.value"/>
+                      <input class="form-control" v-model="item.key">
                     </td>
                     <td>
-                      <button class="btn btn-danger mr-2">
-                        <i class="fas fa-minus-circle"></i>
-                      </button>
-                      <button class="btn btn-info">
-                        <i class="fas fa-plus fa-sm"></i>
-                      </button>
+                      <input class="form-control" v-model="item.value">
                     </td>
                   </tr>
                 </tbody>
@@ -55,16 +50,22 @@
               <table class="table table-bordered">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Key</th>
                     <th>Value</th>
-                    <th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in params" :key="index">
-                    <td>{{item.key}}</td>
-                    <td>{{item.value}}</td>
-                    <td>Collapsed to start, horizontal above breakpoints</td>
+                    <td>
+                      <input type="checkbox" class="form-control" v-model="item.checked" @input="onParamChecked(item)">
+                    </td>
+                    <td>
+                        <input class="form-control" v-model="item.key">
+                    </td>
+                    <td>
+                       <input class="form-control" v-model="item.value">
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -79,7 +80,7 @@
       </div>
       <div class="card-body"></div>
     </div>
-    <Result v-if="showResult"></Result>
+    <Result></Result>
   </div>
 </template>
 
@@ -87,6 +88,8 @@
 import { mapGetters } from "vuex";
 
 import Result from "./Result";
+
+import JSON5 from 'json5';
 
 export default {
   name: "Edit",
@@ -98,32 +101,44 @@ export default {
     headers() {
       let result = [];
       try {
-        let header = JSON.parse(
-          this.selectedApi.header.header.replace(/'/g, '"')
-        );
+        let header = JSON5.parse(this.selectedApi.header.header);
         for (let [key, value] of Object.entries(header)) {
           result.push({
+            checked: true,
             key,
             value
           });
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
+      this.$store.commit('UPDATE_EDIT_HEADERS', result);
       return result;
     },
     params() {
       let result = [];
       try {
-        let params = JSON.parse(this.selectedApiCase.param);
+        let params = JSON5.parse(this.selectedApiCase.param);
         for (let [key, value] of Object.entries(params)) {
           result.push({
+            checked: true,
             key,
             value
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
+      this.$store.commit('UPDATE_EDIT_PARAMS', result);
       return result;
+    }
+  },
+  methods: {
+    onHeaderChecked(headerItem) {
+      this.$store.commit('UPDATE_EDIT_HEADERS', this.headers);
+    },
+    onParamChecked(paramItem) {
+      this.$store.commit('UPDATE_EDIT_PARAMS', this.params);
     }
   }
 };

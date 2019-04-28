@@ -1,8 +1,8 @@
-import {fetchByCrossRequest} from "../../utils";
+import {fetchByCrossRequest, fetchByAjax} from "../../utils";
 
 const run = {
     state: {
-        header: {},
+        headers: {},
         body: {},
         showResult: false,
     },
@@ -12,29 +12,52 @@ const run = {
         },
         HIDE_RESULT(state) {
             state.showResult = false;
+        },
+        CLEAR_RESULT(state) {
+            state.headers = {};
+            state.body = {};
         }
     },
     actions: {
         async DO_REQUEST({commit, state, rootState}, {id}) {
             const {apiCases, selectedApi} = rootState.core;
+            const {headers: requestHeaders = [], params: requestParams = []} = rootState.edit;
+            commit('CLEAR_RESULT');
             if (Array.isArray(apiCases)) {
-                const targetAPI = apiCases.find((item) => {
+                const targetAPICase = apiCases.find((item) => {
                     return Number(item.id) === Number(id);
                 });
-                console.log('targetAPI', targetAPI)
-            }
+                // set request header
+                let realReqHeaders = {};
+                requestHeaders.map((item) => {
+                    realReqHeaders[item.key] = item.value;
+                });
+                // set request body
+                let realReqParams = {};
+                requestParams.map((item) => {
+                    realReqParams[item.key] = item.value;
+                });
 
-            if (selectedApi) {
                 commit('SHOW_RESULT');
-                try {
-                    const {header, body} = await fetchByCrossRequest(selectedApi.url);
-                    if (header && body) {
-                        state.header = header;
-                        state.body = body;
+                // scroll to location
+                document.getElementById("runningResult").scrollIntoView();
+                if (selectedApi) {
+                    try {
+                        const {header, body} = await fetchByCrossRequest(
+                            selectedApi.url,
+                            'GET',
+                            realReqHeaders,
+                            realReqParams,
+                        );
+                        if (header && body) {
+                            state.headers = header;
+                            state.body = body;
+                        }
+                    } catch (e) {
+                        console.error(e)
+                        state.headers = {};
+                        state.body = {};
                     }
-                } catch (e) {
-                    state.header = {};
-                    state.body = {};
                 }
             }
         }
