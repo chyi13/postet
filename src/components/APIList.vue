@@ -69,11 +69,8 @@ export default {
   margin: 0 0.3rem;
   display: block;
   color: #3a3b45;
-  text-decoration: none;
-  border-radius: 0.35rem;
   white-space: nowrap;
   font-size: 0.85rem;
-  border: none;
 }
 .list_item_inner:hover {
   background-color: #eaecf4;

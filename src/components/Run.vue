@@ -64,7 +64,7 @@ export default {
   },
   watch: {
     apiCases: function(newValue, oldValue) {
-      if (Array.isArray(newValue)) {
+      if (Array.isArray(newValue) && newValue.length > 0) {
         this.$store.dispatch("UPDATE_SELECT_API_CASE", newValue[0].id);
         this.$nextTick(() => {
           $("#run_selector").selectpicker("refresh");
@@ -74,9 +74,7 @@ export default {
   },
   methods: {
     send() {
-      console.log('requestHeaders', this.requestHeaders)
-      console.log('requestParams', this.requestParams);
-      this.$store.dispatch("DO_REQUEST", { id: $("#run_selector").val() });
+      this.$emit('onSend');
     }
   },
   mounted() {

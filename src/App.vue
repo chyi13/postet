@@ -14,7 +14,7 @@
             <div class="container-fluid main-container">
               <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
-                  <Run></Run>
+                  <Run @onSend="onRunSend"></Run>
                 </div>
               </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="container-fluid main-container">
               <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
-                  <Edit></Edit>
+                  <Edit ref="edit"></Edit>
                 </div>
               </div>
             </div>
@@ -69,8 +69,11 @@ export default {
     TopBar
   },
   methods: {
-    onTabClicked(tabName) {
-      this.tabSelected = tabName;
+    onRunSend() {
+      if (this.$refs.edit) {
+        const editData = this.$refs.edit.getAllEditData();
+        this.$store.dispatch("DO_REQUEST", editData);
+      }
     }
   }
 };

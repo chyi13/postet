@@ -6,12 +6,26 @@
  * @returns {Promise}
  */
 export async function fetchByCrossRequest(url, method = 'GET', headers = {}, data = {}) {
+    console.log('data', data)
+    let request = {
+        url,
+        method,
+        headers,
+    }
+    if (method == 'POST') {
+        request = {
+            ...request,
+            data,
+        }
+    } else {
+        request = {
+            ...request,
+            query: data,
+        }
+    }
     return new Promise(function(resolve, reject){
         crossRequest({
-            url,
-            method: method,
-            headers,
-            data,
+            ...request,
             success: function (body, header) {
                 resolve({
                     body,
@@ -19,6 +33,7 @@ export async function fetchByCrossRequest(url, method = 'GET', headers = {}, dat
                 });
             },
             error: function(err) {
+                console.log(err);
                 reject(err);
             }
         })

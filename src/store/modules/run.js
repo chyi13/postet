@@ -1,4 +1,4 @@
-import {fetchByCrossRequest, fetchByAjax} from "../../utils";
+import { fetchByCrossRequest, fetchByAjax } from "../../utils";
 
 const run = {
     state: {
@@ -19,45 +19,52 @@ const run = {
         }
     },
     actions: {
-        async DO_REQUEST({commit, state, rootState}, {id}) {
-            const {apiCases, selectedApi} = rootState.core;
-            const {headers: requestHeaders = [], params: requestParams = []} = rootState.edit;
+        async DO_REQUEST({ commit, state, rootState }, dataToSend) {
+            const { apiCases, selectedApi } = rootState.core;
+            const { headers: requestHeaders = [], newHeaders = [], params: requestParams = [], newParams = [], url } = dataToSend;
             commit('CLEAR_RESULT');
-            if (Array.isArray(apiCases)) {
-                const targetAPICase = apiCases.find((item) => {
-                    return Number(item.id) === Number(id);
-                });
-                // set request header
+            if (url) {
+                // merge origin and new headers
                 let realReqHeaders = {};
                 requestHeaders.map((item) => {
-                    realReqHeaders[item.key] = item.value;
+                    if (item.key && item.value && item.checked) {
+                        realReqHeaders[item.key] = item.value;
+                    }
                 });
-                // set request body
+                newHeaders.map((item) => {
+                    if (item.key && item.value) {
+                        realReqHeaders[item.key] = item.value;
+                    }
+                });
+                // merge origin and new params
                 let realReqParams = {};
                 requestParams.map((item) => {
-                    realReqParams[item.key] = item.value;
+                    if (item.key && item.value && item.checked) {
+                        realReqParams[item.key] = item.value;
+                    }
                 });
-
+                newParams.map((item) => {
+                    if (item.key && item.value && item.checked) {
+                        realReqParams[item.key] = item.value;
+                    }
+                });
                 commit('SHOW_RESULT');
                 // scroll to location
                 document.getElementById("runningResult").scrollIntoView();
-                if (selectedApi) {
-                    try {
-                        const {header, body} = await fetchByCrossRequest(
-                            selectedApi.url,
-                            'GET',
-                            realReqHeaders,
-                            realReqParams,
-                        );
-                        if (header && body) {
-                            state.headers = header;
-                            state.body = body;
-                        }
-                    } catch (e) {
-                        console.error(e)
-                        state.headers = {};
-                        state.body = {};
+                try {
+                    const { header, body } = await fetchByCrossRequest(
+                        url,
+                        'GET',
+                        realReqHeaders,
+                        realReqParams,
+                    );
+                    if (header && body) {
+                        state.headers = header;
+                        state.body = body;
                     }
+                } catch (e) {
+                    state.headers = {};
+                    state.body = {};
                 }
             }
         }
