@@ -29,10 +29,10 @@
             </div>
             <div class="col-md-1">
               <div class="row">
-                <button class="btn btn-primary mr-2" @click="send">
+                <button class="btn btn-primary mr-2" @click="postApiCase">
                   <i class="fas fa-paper-plane fa-sm"></i>
                 </button>
-                <button class="btn btn-primary" @click="send">
+                <button class="btn btn-primary" @click="addNewApiCase">
                   <i class="fas fa-plus fa-sm"></i>
                 </button>
               </div>
@@ -73,9 +73,12 @@ export default {
     }
   },
   methods: {
-    send() {
+    postApiCase() {
       this.$emit('onSend');
-    }
+    },
+    addNewApiCase() {
+      this.$store.dispatch('ADD_NEW_API_CASE')
+    },
   },
   mounted() {
     $("#methods_selector").selectpicker();

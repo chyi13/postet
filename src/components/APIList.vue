@@ -24,6 +24,9 @@
           <button class="btn btn-info" type="button">
             <i class="fas fa-search fa-sm"></i>
           </button>
+          <button class="btn btn-info" type="button" @click="addNewApi">
+            <i class="fas fa-plus fa-sm"></i>
+          </button>
         </div>
       </div>
     </li>
@@ -54,6 +57,9 @@ export default {
     },
     onSearchInputChange() {
       this.$store.dispatch("FILTER_API_CASES", this.apiSearchInput);
+    },
+    addNewApi() {
+      this.$store.dispatch('ADD_NEW_API');
     }
   }
 };

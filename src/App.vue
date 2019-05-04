@@ -31,6 +31,8 @@
         </div>
       </div>
     </div>
+    <add-api v-if="addModalType === 'modalNewApi'"></add-api>
+    <add-api-case v-else-if="addModalType === 'modalNewApiCase'"></add-api-case>
   </div>
 </template>
 <script>
@@ -41,6 +43,8 @@ import TopBar from "./components/TopBar.vue";
 import ApiList from "./components/APIList.vue";
 
 import { mapGetters } from "vuex";
+import AddApi from "./components/AddApi.vue";
+import AddApiCase from "./components/AddApiCase.vue";
 
 export default {
   name: "home",
@@ -53,7 +57,10 @@ export default {
     }, 100);
   },
   computed: {
-    ...mapGetters(["selectedApiCase"])
+    ...mapGetters([
+      "selectedApiCase",
+      "addModalType",
+    ])
   },
   data() {
     return {
@@ -62,7 +69,9 @@ export default {
     };
   },
   components: {
-    ApiList,
+    AddApiCase,
+    AddApi,
+      ApiList,
     Edit,
     Run,
     Result,
@@ -88,6 +97,6 @@ export default {
 }
 
 .modal-lg {
-  min-width: 65%;
+  min-width: 55%;
 }
 </style>
