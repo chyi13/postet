@@ -27,13 +27,16 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
               <div class="row">
-                <button class="btn btn-primary mr-2" @click="postApiCase">
+                <button class="btn btn-primary mr-1" @click="postApiCase">
                   <i class="fas fa-paper-plane fa-sm"></i>
                 </button>
-                <button class="btn btn-primary" @click="addNewApiCase">
+                <button class="btn btn-warning mr-1" @click="addNewApiCase">
                   <i class="fas fa-plus fa-sm"></i>
+                </button>
+                <button class="btn btn-danger" @click="addNewApiCase">
+                  <i class="fas fa-save fa-sm"></i>
                 </button>
               </div>
             </div>

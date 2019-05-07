@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Run></Run>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
@@ -152,12 +153,14 @@
 import { mapGetters } from "vuex";
 
 import Result from "./Result";
+import Run from './Run';
 
 import JSON5 from "json5";
 
 export default {
   name: "Edit",
   components: {
+    Run,
     Result
   },
   data() {

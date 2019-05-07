@@ -17,12 +17,13 @@ export async function fetchByCrossRequest(url, method = 'GET', headers = {}, dat
             ...request,
             data,
         }
-    } else {
+    } else if (method === 'GET'){
         request = {
             ...request,
             query: data,
         }
     }
+    console.log('request', request);
     return new Promise(function(resolve, reject){
         crossRequest({
             ...request,
@@ -32,8 +33,8 @@ export async function fetchByCrossRequest(url, method = 'GET', headers = {}, dat
                     header,
                 });
             },
-            error: function(err) {
-                console.log(err);
+            error: function(err, msg, b) {
+                console.log(err, msg, b);
                 reject(err);
             }
         })
@@ -76,4 +77,11 @@ export function isJSON(obj) {
         }
     } catch (e) {}
     return false;
+}
+
+/**
+ * 判断是否为链接
+ */
+export function checkIfUrl(url) {
+    return url && /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(url);
 }

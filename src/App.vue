@@ -9,16 +9,6 @@
         <TopBar></TopBar>
         <!-- Begin Page Content -->
         <div class="container-fluid">
-          <!-- Masthead -->
-          <section class="features-icons bg-light">
-            <div class="container-fluid main-container">
-              <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                  <Run @onSend="onRunSend"></Run>
-                </div>
-              </div>
-            </div>
-          </section>
           <section v-if="selectedApiCase" class="features-icons bg-light">
             <div class="container-fluid main-container">
               <div class="row d-flex justify-content-center">
@@ -31,8 +21,8 @@
         </div>
       </div>
     </div>
-    <add-api v-if="addModalType === 'modalNewApi'"></add-api>
-    <add-api-case v-else-if="addModalType === 'modalNewApiCase'"></add-api-case>
+    <add-or-update-api v-if="addModalType === 'modalApi'"></add-or-update-api>
+    <add-or-update-api-case v-else-if="addModalType === 'modalApiCase'"></add-or-update-api-case>
   </div>
 </template>
 <script>
@@ -43,15 +33,15 @@ import TopBar from "./components/TopBar.vue";
 import ApiList from "./components/APIList.vue";
 
 import { mapGetters } from "vuex";
-import AddApi from "./components/AddApi.vue";
-import AddApiCase from "./components/AddApiCase.vue";
+import AddOrUpdateApi from "./components/AddOrUpdateApi.vue";
+import AddOrUpdateApiCase from "./components/AddOrUpdateApiCase.vue";
 
 export default {
   name: "home",
   mounted() {
     let checkInterval = setInterval(() => {
       if (window.crossRequest) {
-        this.$store.dispatch("UPDATE_API_IDS");
+        this.$store.dispatch("INIT_CORE");
         clearInterval(checkInterval);
       }
     }, 100);
@@ -69,9 +59,9 @@ export default {
     };
   },
   components: {
-    AddApiCase,
-    AddApi,
-      ApiList,
+    AddOrUpdateApi,
+    AddOrUpdateApiCase,
+    ApiList,
     Edit,
     Run,
     Result,

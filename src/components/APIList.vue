@@ -32,7 +32,14 @@
     </li>
     <li v-for="(item, index) in apiIdsDummy" class="list_item_container" :key="index">
       <div class="bg-white py-2 collapse-inner">
-        <div class="list_item_inner truncate" @click="onAPIClicked(item)">{{item.name}}</div>
+        <div
+          class="list_item_inner"
+          @mouseover="onAPIHover(item)"
+        ><span class="d-inline-block text-truncate" :class="{'max_width_hover': item.hover, 'max_width': !item.hover}" @click="onAPIClicked(item)">{{item.name}}</span>
+        <div class="float-right" @click="editApi(item)">
+         <i v-if="item.hover" class="fas fa-edit"></i>
+        </div>
+        </div>
       </div>
     </li>
   </ul>
@@ -45,21 +52,56 @@ export default {
   name: "api-list",
   data() {
     return {
-      apiSearchInput: ''
-    }
+      apiSearchInput: "",
+      apiIdsDummy: []
+    };
   },
   computed: {
-    ...mapGetters(["apiIdsDummy"])
+    ...mapGetters(["apiIds"])
+  },
+  watch: {
+    apiIds: {
+      immediate: true,
+      handler: function(val) {
+        if (Array.isArray(val)) {
+          this.apiIdsDummy = val.map(item => {
+            return {
+              ...item,
+              hover: false
+            };
+          });
+        }
+      }
+    }
   },
   methods: {
     onAPIClicked(item) {
       this.$store.dispatch("UPDATE_API_CASES", item);
     },
+    onAPIHover(hoverItem) {
+      this.apiIdsDummy = this.apiIdsDummy.map(item => {
+        return {
+          ...item,
+          hover: item.id === hoverItem.id
+        };
+      });
+    },
     onSearchInputChange() {
-      this.$store.dispatch("FILTER_API_CASES", this.apiSearchInput);
+      if (this.apiSearchInput) {
+        this.apiIdsDummy = this.apiIds.filter(
+          item => item.name.indexOf(this.apiSearchInput) > -1
+        );
+      } else {
+        this.apiIdsDummy = this.apiIds.map(item => {
+          return { ...item };
+        });
+      }
     },
     addNewApi() {
-      this.$store.dispatch('ADD_NEW_API');
+      this.$store.dispatch("ADD_NEW_API");
+    },
+    editApi(item) {
+      this.$store.dispatch("DELETE_API", item);
     }
   }
 };
@@ -77,14 +119,16 @@ export default {
   color: #3a3b45;
   white-space: nowrap;
   font-size: 0.85rem;
+  
 }
 .list_item_inner:hover {
   background-color: #eaecf4;
   cursor: pointer;
 }
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.max_width {
+  max-width: 13rem;
+}
+.max_width_hover {
+  max-width: 11rem;
 }
 </style>

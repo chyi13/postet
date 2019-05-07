@@ -4,13 +4,15 @@ const getters = {
   selectedApi: state => state.core.selectedApi,
   apiCases: state => state.core.apiCases,
   selectedApiCase: state => state.core.selectedApiCase,
+  commonHeaders: state => state.core.commonHeaders,
+  commonParams: state => state.core.commonParams,
+  commonValid: state => state.core.commonValid,
   showResult: state => state.run.showResult,
-  requestHeaders: state => state.edit.headers,
-  requestParams: state => state.edit.params,
+  type: state => state.apiCase.type,
   resultHeaders: state => state.run.headers,
   resultBody: state => state.run.body,
-  showAddModal: state => state.add.showModal,
-  addModalType: state => state.add.modalType,
+  showAddModal: state => state.api.showModal,
+  addModalType: state => state.api.modalType,
 };
 
 export default getters
