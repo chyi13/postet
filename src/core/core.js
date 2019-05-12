@@ -55,7 +55,7 @@ export async function deleteTestApi(id) {
 /**
  * fetch test api ids
  */
-export async function fetchTestApiIds() {
+export async function fetchApis() {
     let url = TEST_API_URL;
     let apis = [];
     let pageId = 1;

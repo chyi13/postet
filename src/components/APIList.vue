@@ -57,10 +57,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["apiIds"])
+    ...mapGetters(["apis"])
   },
   watch: {
-    apiIds: {
+    apis: {
       immediate: true,
       handler: function(val) {
         if (Array.isArray(val)) {

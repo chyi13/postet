@@ -1,9 +1,8 @@
-import { fetchTestApiIds, fetchAPICases, fetchCommonHeaders, fetchCommonParams, fetchCommonValid } from "../../core/core";
+import { fetchApis, fetchAPICases, fetchCommonHeaders, fetchCommonParams, fetchCommonValid } from "../../core/core";
 
 const core = {
     state: {
-        apiIds: [],
-        apiIdsDummy: [],
+        apis: [],
         apiCases: [],
         selectedApi: null,
         selectedApiCase: null,
@@ -12,9 +11,8 @@ const core = {
         commonValid: [],
     },
     mutations: {
-        SET_API_IDS(state, apiIds) {
-            state.apiIds = apiIds;
-            state.apiIdsDummy = [...apiIds];
+        SET_APIS(state, apis) {
+            state.apis = apis;
         },
         SET_SELECTED_API(state, selectedApi) {
             state.selectedApi = selectedApi;
@@ -22,8 +20,8 @@ const core = {
         SET_API_CASES(state, apiCases) {
             state.apiCases = apiCases;
         },
-        SET_SELECTED_API_CASE(state, selectedApiCase) {
-            state.selectedApiCase = selectedApiCase;
+        SET_SELECTED_API_CASE(state, apiCase) {
+            state.selectedApiCase = apiCase;
         },
         SET_COMMON_HEADERS(state, commonHeaders) {
             state.commonHeaders = commonHeaders;
@@ -37,14 +35,14 @@ const core = {
     },
     actions: {
         async INIT_CORE({commit, dispatch}) {
-            dispatch("UPDATE_API_IDS");
+            dispatch("UPDATE_APIS");
             dispatch("UPDATE_COMMON_HEADERS");
             dispatch("UPDATE_COMMON_PARAMS");
             dispatch("UPDATE_COMMON_VALID");
         },
-        async UPDATE_API_IDS({commit}) {
-            const apiIds = await fetchTestApiIds();
-            commit('SET_API_IDS', apiIds);
+        async UPDATE_APIS({commit}) {
+            const apis = await fetchApis();
+            commit('SET_APIS', apis);
         },
         async UPDATE_COMMON_HEADERS({commit}) {
             const commonHeaders = await fetchCommonHeaders();

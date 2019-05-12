@@ -1,17 +1,27 @@
 <template>
   <div>
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">{{selectedApi.name}}</h1>
+    </div>
     <Run></Run>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
       </div>
-      <div class="card-body">
+      <div v-if="selectedApiCase" class="card-body">
         <div class="mb-1 small">接口名称:</div>
         <p>{{selectedApiCase.name}}</p>
         <div class="mb-1 small">创建时间:</div>
         <p>{{selectedApiCase.create_time}}</p>
         <div class="mb-1 small">路径:</div>
         <input class="form-control col-lg-10" v-model="url">
+      </div>
+      <div v-else class="card-body">
+        <div class="mb-1 small">接口名称:</div>
+          <input class="form-control col-lg-10">
+        <div class="mb-1 small">路径:</div>
+        <input class="form-control col-lg-10">
       </div>
     </div>
     <div class="card shadow mb-4">

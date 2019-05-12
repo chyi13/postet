@@ -28,7 +28,7 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+          <span class="mr-2 d-none d-lg-inline text-gray-600 small">chyi13</span>
           <img class="img-profile rounded-circle" >
         </a>
         <!-- Dropdown - User Information -->

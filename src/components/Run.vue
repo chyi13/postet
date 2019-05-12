@@ -67,6 +67,7 @@ export default {
   },
   watch: {
     apiCases: function(newValue, oldValue) {
+        console.log('apiCasessss', newValue);
       if (Array.isArray(newValue) && newValue.length > 0) {
         this.$store.dispatch("UPDATE_SELECT_API_CASE", newValue[0].id);
         this.$nextTick(() => {

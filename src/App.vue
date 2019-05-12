@@ -9,7 +9,7 @@
         <TopBar></TopBar>
         <!-- Begin Page Content -->
         <div class="container-fluid">
-          <section v-if="selectedApiCase" class="features-icons bg-light">
+          <section v-if="selectedApi" class="features-icons bg-light">
             <div class="container-fluid main-container">
               <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "selectedApiCase",
+      "selectedApi",
       "addModalType",
     ])
   },
