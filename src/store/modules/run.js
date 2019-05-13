@@ -23,6 +23,7 @@ const run = {
             const { apiCases, selectedApi } = rootState.core;
             const { headers: requestHeaders = [], newHeaders = [], params: requestParams = [], newParams = [], url } = dataToSend;
             commit('CLEAR_RESULT');
+            console.log('DO_REQUEST');
             if (url) {
                 // merge origin and new headers
                 let realReqHeaders = {};

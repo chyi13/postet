@@ -235,7 +235,4 @@
     td {
         text-align: center;
     }
-    .invalid {
-        border: 1px solid red;
-    }
 </style>

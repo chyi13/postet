@@ -29,7 +29,10 @@ export async function fetchAPICases(apiId) {
     return apiCases;
 }
 
-export async function createTestApi({valid, header, param, name, url, stag_url, online_url, setup_suite}) {
+/**
+ * create new api
+ */
+export async function createApi({valid, header, param, name, url, stag_url, online_url, setup_suite}) {
     if (valid && header && param && name && url && stag_url && online_url) {
         let postURL = TEST_API_URL;
         const result = await fetchDelegate(postURL, 'POST', 
@@ -44,6 +47,29 @@ export async function createTestApi({valid, header, param, name, url, stag_url, 
     }
 }
 
+/**
+ * create new api case
+ */
+export async function createApiCase({valid, header, param, name, api}) {
+    console.log('valid, header, param, name, api', valid, header, param, name, api)
+    if (name && api) {
+        let postURL = TEST_CASES_URL;
+        const result = await fetchDelegate(postURL, 'POST', 
+            {  
+                'Content-Type': 'application/json'
+            },
+            {
+                valid, header, param, name, api
+            }
+        );
+        console.log('create', result);
+    }
+} 
+
+
+/**
+ * delete test api
+ */
 export async function deleteTestApi(id) {
     if (id) {
         let deleteURL = TEST_API_URL;

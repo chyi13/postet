@@ -17,17 +17,11 @@
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
                             </div>
-                            <div class="card-body">
+                           <div class="card-body">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <div for="apiName">接口名称</div>
-                                        <input type="text" class="form-control" id="apiName" v-model="apiName"/>
-                                    </div>
-                                    <!--<div class="mb-1 small">创建时间:</div>-->
-                                    <!--<p>{{selectedApiCase.create_time}}</p>-->
-                                    <div class="form-group">
-                                        <label for="apiName">路径</label>
-                                        <input type="text" class="form-control" id="apiUrl" v-model="apiUrl"/>
+                                        <label for="newApiCaseName" class="control-label">name<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" :class="{invalid: newApiNameValValid === 0}" id="newApiCaseName" v-model="newApiNameVal" placeHolder="接口名称..."/>
                                     </div>
                                 </div>
                             </div>
@@ -39,34 +33,51 @@
                             <div class="card-body">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label>Headers</label>
-                                        <table class="table table-bordered table-center">
+                                        <label>公共Headers</label>
+                                        <table class="table table-bordered table-center table-sm">
                                             <thead>
                                             <tr>
-                                                <th></th>
-                                                <th>Key</th>
-                                                <th>Value</th>
-                                                <th></th>
+                                                <th class="h6">Key</th>
+                                                <th class="h6">Value</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(item, index) in selectedCommonHeaders" :key="'new' + index">
+                                                <td>
+                                                    <input class="form-control form-control-sm" v-model="item.key" disabled>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" v-model="item.value" disabled>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Headers</label>
+                                        <table class="table table-bordered table-center table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th class="h6">Key</th>
+                                                <th class="h6">Value</th>
+                                                <th class="h6"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr v-for="(item, index) in headers" :key="'new' + index">
                                                 <td>
-                                                    <input type="checkbox" class="form-control" v-model="item.checked">
+                                                    <input class="form-control form-control-sm" v-model="item.key">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" v-model="item.key">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control" v-model="item.value">
+                                                    <input class="form-control form-control-sm" v-model="item.value">
                                                 </td>
                                                 <td v-if="index === headers.length - 1">
-                                                    <button class="btn btn-info" @click="addNewHeader">
+                                                    <button class="btn btn-info btn-sm" @click="addNewHeader">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </td>
                                                 <td v-else>
-                                                    <button class="btn btn-danger"
+                                                    <button class="btn btn-danger btn-sm"
                                                             @click="deleteNewHeader(item, index)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -76,34 +87,51 @@
                                         </table>
                                     </div>
                                     <div class="form-group">
-                                        <label>Params</label>
-                                        <table class="table table-bordered table-center">
+                                        <label>公共Params</label>
+                                        <table class="table table-bordered table-center table-sm">
                                             <thead>
                                             <tr>
-                                                <th></th>
-                                                <th>Key</th>
-                                                <th>Value</th>
-                                                <th></th>
+                                                <th class="h6">Key</th>
+                                                <th class="h6">Value</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(item, index) in selectedCommonParams" :key="'new' + index">
+                                                <td>
+                                                    <input class="form-control form-control-sm" v-model="item.key" disabled>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" v-model="item.value" disabled>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Params</label>
+                                        <table class="table table-bordered table-center table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th class="h6">Key</th>
+                                                <th class="h6">Value</th>
+                                                <th class="h6"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr v-for="(item, index) in params" :key="'new' + index">
                                                 <td>
-                                                    <input type="checkbox" class="form-control" v-model="item.checked">
+                                                    <input class="form-control form-control-sm" v-model="item.key">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" v-model="item.key">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control" v-model="item.value">
+                                                    <input class="form-control form-control-sm" v-model="item.value">
                                                 </td>
                                                 <td v-if="index === params.length - 1">
-                                                    <button class="btn btn-info" @click="addNewParam">
+                                                    <button class="btn btn-info btn-sm" @click="addNewParam">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </td>
                                                 <td v-else>
-                                                    <button class="btn btn-danger"
+                                                    <button class="btn btn-danger btn-sm"
                                                             @click="deleteNewParam(item, index)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -120,12 +148,13 @@
                                 <h6 class="m-0 font-weight-bold text-primary">校验</h6>
                             </div>
                             <div class="card-body">
-                                <input class="form-control" v-model="valid"/>
+                                <input class="form-control" v-model="valid" :class="{invalid: validValid === 0}"/>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal" @click="save">
+                         <button type="button" class="btn btn-success" data-dismiss="modal" @click="save" 
+                            :disabled="newApiNameValValid < 1 && validValid < 1">
                             Save
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="onBackdropClicked">
@@ -150,8 +179,10 @@
     props: {},
     data() {
       return {
-        apiName: '',
-        apiUrl: '',
+        newApiNameVal: '',
+        newApiNameValValid: -1,
+        commonHeaders: [],
+        commonParams: [],
         headers: [
           {
             checked: false,
@@ -167,17 +198,36 @@
           }
         ],
         valid: '',
+        validValid: -1,
       }
     },
     computed: {
       ...mapGetters([
-        'showAddModal',
+        "showAddModal",
+        "selectedApi",
+        "selectedCommonHeaders", 
+        "selectedCommonParams",
       ]),
+    },
+    watch: {
+        newApiNameVal: function(val) {
+            if (val === '') {
+                this.newApiNameValValid = 0;
+            } else {
+                this.newApiNameValValid = 1;
+            }
+        },
+        valid: function(val) {
+            if (val === '') {
+                this.validValid = 0;
+            } else {
+                this.validValid = 1;
+            }
+        }
     },
     methods: {
       addNewHeader() {
         this.headers.push({
-          checked: false,
           key: "",
           value: ""
         });
@@ -199,11 +249,11 @@
         this.$store.commit('HIDE_MODAL');
       },
       save() {
-        this.$store.dispatch('SAVE_NEW_API', {
-          apiName: this.apiName,
-          apiUrl: this.apiUrl,
-          headers: this.headers,
-          params: this.params,
+        this.$store.dispatch('SAVE_NEW_API_CASE', {
+          name: this.newApiNameVal,
+          api: this.selectedApi.id,
+          headers: this.headers.filter((item) => item.key && item.value),
+          params: this.params.filter((item) => item.key && item.value),
           valid: this.valid,
         });
       }

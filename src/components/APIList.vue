@@ -35,7 +35,8 @@
         <div
           class="list_item_inner"
           @mouseover="onAPIHover(item)"
-        ><span class="d-inline-block text-truncate" :class="{'max_width_hover': item.hover, 'max_width': !item.hover}" @click="onAPIClicked(item)">{{item.name}}</span>
+          @click="onAPIClicked(item)"
+        ><span class="d-inline-block text-truncate" :class="{'max_width_hover': item.hover, 'max_width': !item.hover}">{{item.name}}</span>
         <div class="float-right" @click="editApi(item)">
          <i v-if="item.hover" class="fas fa-edit"></i>
         </div>
@@ -76,7 +77,11 @@ export default {
   },
   methods: {
     onAPIClicked(item) {
-      this.$store.dispatch("UPDATE_API_CASES", item);
+      this.$store.dispatch("UPDATE_SELECTED_API", item);
+      this.$nextTick(() => {
+            // scroll to location
+            document.getElementById("api_edit_header_name").scrollIntoView();
+      })
     },
     onAPIHover(hoverItem) {
       this.apiIdsDummy = this.apiIdsDummy.map(item => {

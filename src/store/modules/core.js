@@ -1,14 +1,17 @@
 import { fetchApis, fetchAPICases, fetchCommonHeaders, fetchCommonParams, fetchCommonValid } from "../../core/core";
+import { parseCommonData } from "../../utils"; 
 
 const core = {
     state: {
         apis: [],
         apiCases: [],
         selectedApi: null,
-        selectedApiCase: null,
-        commonHeaders: [],
-        commonParams: [],
-        commonValid: [],
+        selectedCommonHeaders: [],  // 选中api的公共请求头
+        selectedCommonParams: [],   // 选中api的公共请求参数
+        selectedApiCase: null,  // 选中的apicase
+        commonHeaders: [],  // 所有公共请求头
+        commonParams: [],   // 所有公共请求参数
+        commonValid: [],    // 所有公共校验
     },
     mutations: {
         SET_APIS(state, apis) {
@@ -31,7 +34,13 @@ const core = {
         },
         SET_COMMON_VALID(state, commonValid) {
             state.commonValid = commonValid;
-        }
+        },
+        SET_SELECTED_COMMON_HEADERS(state, selectedCommonHeaders) {
+            state.selectedCommonHeaders = selectedCommonHeaders;
+        },
+        SET_SELECTED_COMMON_PARAMS(state, selectedCommonParams) {
+            state.selectedCommonParams = selectedCommonParams;
+        },
     },
     actions: {
         async INIT_CORE({commit, dispatch}) {
@@ -56,10 +65,30 @@ const core = {
             const commonValid = await fetchCommonValid();
             commit('SET_COMMON_VALID', commonValid);
         },
-        async UPDATE_API_CASES({commit, state}, selectedApi) {
+        UPDATE_SELECTED_API({commit, state, dispatch}, selectedApi) {
+            console.log('selected', selectedApi);
             if (selectedApi && selectedApi.id) {
+                // clear api cases
+                commit('SET_API_CASES', []);
                 commit('SET_SELECTED_API', selectedApi);
-                const apiCases = await fetchAPICases(selectedApi.id);
+                // fetch its api cases
+                dispatch('UPDATE_API_CASES', selectedApi.id);
+                // update select commonHeaders commonParams
+                const {commonHeaders = [], commonParams = [], selectedApi: {header, param} = {}} = state;
+                const selectedCommonHeaders = parseCommonData(commonHeaders.find((item) => item.id === header));
+                const selectedCommonParams = parseCommonData(commonHeaders.find((item) => item.id === param));
+                if (selectedCommonHeaders) {
+                    commit('SET_SELECTED_COMMON_HEADERS', selectedCommonHeaders);
+                }
+                if (selectedCommonParams) {
+                    commit('SET_SELECTED_COMMON_PARAMS', selectedCommonParams);
+                }
+            }
+        },
+        async UPDATE_API_CASES({commit, state}, selectedApiId) {
+            if (selectedApiId) {
+                // request api cases
+                const apiCases = await fetchAPICases(selectedApiId);
                 commit('SET_API_CASES', apiCases);
             }
         },
@@ -68,6 +97,7 @@ const core = {
             const targetAPICase = apiCases.find((item) => {
                 return Number(item.id) === Number(selectedApiCaseId);
             });
+            console.log('targetAPICase', targetAPICase);
             commit('SET_SELECTED_API_CASE', targetAPICase);
         },
     }

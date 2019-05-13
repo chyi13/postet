@@ -1,3 +1,5 @@
+import JSON5 from "json5";
+
 /**
  * 使用crossRequest发送请求
  * @param url
@@ -84,4 +86,77 @@ export function isJSON(obj) {
  */
 export function checkIfUrl(url) {
     return url && /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(url);
+}
+
+/**
+ * 预处理通用请求头
+ */
+export function parseCommonData(data) {
+    let result = [];
+    if (data && data.param) {
+        try {
+            const param = JSON5.parse(data.param);
+            for (let [key, value] of Object.entries(param)) {
+                result.push({
+                    key, value,
+                });
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+    return result;
+}
+
+/**
+ * 将header或者param数组转化为对象后stringify
+ */
+export function stringifyHeaderOrParam(data) {
+    let result = {};
+    if (Array.isArray(data)) {
+        data.map(item => {
+            result[item.key] = item.value;
+        });
+    }
+    return JSON.stringify(result);
+}
+
+/**
+ * 合并请求头参数
+ */
+export function mergeHeaders(newHeader, oldHeader) {
+    let result = {};
+    if (newHeader) {
+        result = {
+            ...result,
+            ...newHeader,
+        }
+    }
+    if (oldHeader) {
+        result = {
+            ...result,
+            ...oldHeader,
+        }
+    }
+    return result;
+}
+
+/**
+ * 合并请求参数
+ */
+export function mergeParams(newParams, oldParams) {
+    let result = {};
+    if (newParams) {
+        result = {
+            ...result,
+            ...newParams,
+        }
+    }
+    if (oldParams) {
+        result = {
+            ...result,
+            ...oldParams,
+        }
+    }
+    return result;
 }

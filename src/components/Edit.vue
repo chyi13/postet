@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div id="api_edit_header_name" class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">{{selectedApi.name}}</h1>
     </div>
-    <Run></Run>
+    <Run @onSend="onSend"></Run>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">接口信息</h6>
@@ -31,14 +31,39 @@
       <div class="card-body">
         <div class="col-lg-12">
           <div class="form-group">
+            <label>公共Headers</label>
+              <table class="table table-bordered table-center table-sm">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th class="h6">Key</th>
+                    <th class="h6">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in selectedCommonHeaders" :key="'new' + index">
+                    <td>
+                      <input type="checkbox" class="form-control" v-model="item.checked">
+                    </td> 
+                    <td>
+                      <input class="form-control form-control-sm" v-model="item.key">
+                    </td>
+                    <td>
+                      <input class="form-control form-control-sm" v-model="item.value">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="form-group">
             <label>Headers</label>
-            <table class="table table-bordered table-center">
+            <table class="table table-bordered table-center table-sm">
               <thead>
                 <tr>
                   <th></th>
-                  <th>Key</th>
-                  <th>Value</th>
-                  <th></th>
+                  <th class="h6">Key</th>
+                  <th class="h6">Value</th>
+                  <th class="h6"></th>
                 </tr>
               </thead>
               <tbody>
@@ -52,10 +77,10 @@
                     >
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.key">
+                    <input class="form-control form-control-sm" v-model="item.key">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.value">
+                    <input class="form-control form-control-sm" v-model="item.value">
                   </td>
                   <td>
                     <button class="btn btn-danger" @click="onHeaderDelete(item, index)">
@@ -68,18 +93,18 @@
                     <input type="checkbox" class="form-control" v-model="item.checked">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.key">
+                    <input class="form-control form-control-sm" v-model="item.key">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.value">
+                    <input class="form-control form-control-sm" v-model="item.value">
                   </td>
                   <td v-if="index === newHeaders.length - 1">
-                    <button class="btn btn-info" @click="onNewHeaderAdded">
+                    <button class="btn btn-info btn-sm" @click="onNewHeaderAdded">
                       <i class="fas fa-plus"></i>
                     </button>
                   </td>
                   <td v-else>
-                    <button class="btn btn-danger" @click="onNewHeaderDelete(item, index)">
+                    <button class="btn btn-danger btn-sm" @click="onNewHeaderDelete(item, index)">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -88,14 +113,39 @@
             </table>
           </div>
           <div class="form-group">
-            <label>Params</label>
-            <table class="table table-bordered table-center">
+            <label>公共Params</label>
+            <table class="table table-bordered table-center table-sm">
               <thead>
                 <tr>
                   <th></th>
-                  <th>Key</th>
-                  <th>Value</th>
+                  <th class="h6">Key</th>
+                  <th class="h6">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in selectedCommonParams" :key="'new' + index">
+                  <td>
+                      <input type="checkbox" class="form-control" v-model="item.checked">
+                  </td> 
+                  <td>
+                    <input class="form-control form-control-sm" v-model="item.key">
+                  </td>
+                  <td>
+                    <input class="form-control form-control-sm" v-model="item.value">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-group">
+            <label>Params</label>
+            <table class="table table-bordered table-center  table-sm">
+              <thead>
+                <tr>
                   <th></th>
+                  <th class="h6">Key</th>
+                  <th class="h6">Value</th>
+                  <th class="h6"></th>
                 </tr>
               </thead>
               <tbody>
@@ -109,10 +159,10 @@
                     >
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.key">
+                    <input class="form-control form-control-sm" v-model="item.key">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.value">
+                    <input class="form-control form-control-sm" v-model="item.value">
                   </td>
                   <td>
                     <button class="btn btn-danger" @click="onParamDelete(item, index)">
@@ -125,18 +175,18 @@
                     <input type="checkbox" class="form-control" v-model="item.checked">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.key">
+                    <input class="form-control form-control-sm" v-model="item.key">
                   </td>
                   <td>
-                    <input class="form-control" v-model="item.value">
+                    <input class="form-control form-control-sm" v-model="item.value">
                   </td>
                   <td v-if="index === newParams.length - 1">
-                    <button class="btn btn-info" @click="onNewParamAdded">
+                    <button class="btn btn-info btn-sm" @click="onNewParamAdded">
                       <i class="fas fa-plus"></i>
                     </button>
                   </td>
                   <td v-else>
-                    <button class="btn btn-danger" @click="onNewParamDelete(item, index)">
+                    <button class="btn btn-danger btn-sm" @click="onNewParamDelete(item, index)">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -151,8 +201,8 @@
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">校验</h6>
       </div>
-      <div class="card-body">
-        {{selectedApi.valid}}
+      <div v-if="selectedApiCase" class="card-body">
+        {{selectedApiCase.valid}}
       </div>
     </div>
     <Result></Result>
@@ -172,6 +222,9 @@ export default {
   components: {
     Run,
     Result
+  },
+  computed: {
+    ...mapGetters(["selectedApi", "selectedApiCase", "selectedCommonHeaders", "selectedCommonParams", "showResult"])
   },
   data() {
     return {
@@ -198,6 +251,7 @@ export default {
     selectedApi: {
       immediate: true,
       handler: function(val) {
+          console.log('val', val);
         let result = [];
         try {
           let header = JSON5.parse(this.selectedApi.header.header);
@@ -249,9 +303,6 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters(["selectedApi", "selectedApiCase", "showResult"])
-  },
   methods: {
     onHeaderChecked(headerItem) {
       this.$store.commit("UPDATE_EDIT_HEADERS", this.headers);
@@ -284,6 +335,9 @@ export default {
     },
     onParamDelete(item, index) {
       this.params = this.params.filter((param, i) => i !== index);
+    },
+    onSend() {
+      this.$store.dispatch('DO_REQUEST', this.getAllEditData());
     },
     getAllEditData() {
       return {

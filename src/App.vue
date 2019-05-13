@@ -9,10 +9,10 @@
         <TopBar></TopBar>
         <!-- Begin Page Content -->
         <div class="container-fluid">
-          <section v-if="selectedApi" class="features-icons bg-light">
+          <section class="features-icons bg-light">
             <div class="container-fluid main-container">
               <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
+                <div v-if="selectedApi" class="col-lg-8">
                   <Edit ref="edit"></Edit>
                 </div>
               </div>
@@ -78,15 +78,18 @@ export default {
 };
 </script>
 <style>
-#wrapper {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-}
+    #wrapper {
+      font-family: "Avenir", Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: left;
+      color: #2c3e50;
+    }
 
-.modal-lg {
-  min-width: 55%;
-}
+    .modal-lg {
+      min-width: 55%;
+    }
+    .invalid {
+        border: 1px solid red;
+    }
 </style>
