@@ -88,6 +88,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">前置操作</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>参数</label>
+                                        <select id="setupSelector" data-live-search="true" class="form-control">
+                                          <option
+                                            v-for="(item, index) in setup"
+                                            :key="index"
+                                            :value="item.id"
+                                          >{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" data-dismiss="modal" @click="save" 
@@ -132,6 +151,8 @@
         'commonHeaders',
         'commonParams',
         'commonValid',
+        'setup',
+        'teardown',
       ]),
     },
     watch: {
@@ -151,6 +172,12 @@
             immediate: true,
             handler: function(val) {
                  $("#commonValidSelector").selectpicker("refresh");
+            }
+        },
+        setup: {
+            immediate: true,
+            handler: function(val) {
+                 $("#setupSelector").selectpicker("refresh");
             }
         },
         apiNameVal: {
@@ -207,9 +234,13 @@
       }
     },
     mounted() {
-        $("#commonHeaderSelector").selectpicker();
-        $("#commonParamSelector").selectpicker();
-        $("#commonValidSelector").selectpicker();
+        this.$nextTick(() => {
+            $("#commonHeaderSelector").selectpicker();
+            $("#commonParamSelector").selectpicker();
+            $("#commonValidSelector").selectpicker();
+            $("#setupSelector").selectpicker();
+            $("#teardownSelector").selectpicker();
+        });
     }
   };
 </script>

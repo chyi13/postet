@@ -41,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in selectedCommonHeaders" :key="'new' + index">
+                  <tr v-for="(item, index) in selectedCommonHeadersDummy" :key="'new' + index">
                     <td>
                       <input type="checkbox" class="form-control" v-model="item.checked">
                     </td> 
@@ -123,7 +123,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in selectedCommonParams" :key="'new' + index">
+                <tr v-for="(item, index) in selectedCommonParamsDummy" :key="'new' + index">
                   <td>
                       <input type="checkbox" class="form-control" v-model="item.checked">
                   </td> 
@@ -165,7 +165,7 @@
                     <input class="form-control form-control-sm" v-model="item.value">
                   </td>
                   <td>
-                    <button class="btn btn-danger" @click="onParamDelete(item, index)">
+                    <button class="btn btn-danger btn-sm" @click="onParamDelete(item, index)">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -205,6 +205,44 @@
         {{selectedApiCase.valid}}
       </div>
     </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">前置操作</h6>
+        </div>
+        <div class="card-body">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label>参数</label>
+                    <select id="apiCaseEditSetupSelector" data-live-search="true" class="form-control form-control-sm">
+                      <option
+                        v-for="(item, index) in setup"
+                        :key="index"
+                        :value="item.id"
+                      >{{item.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">后置操作</h6>
+        </div>
+        <div class="card-body">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label>参数</label>
+                    <select id="apiCaseEditTeardownSelector" data-live-search="true" class="form-control form-control-sm">
+                      <option
+                        v-for="(item, index) in teardown"
+                        :key="index"
+                        :value="item.id"
+                      >{{item.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
     <Result></Result>
   </div>
 </template>
@@ -224,7 +262,7 @@ export default {
     Result
   },
   computed: {
-    ...mapGetters(["selectedApi", "selectedApiCase", "selectedCommonHeaders", "selectedCommonParams", "showResult"])
+    ...mapGetters(["selectedApi", "selectedApiCase", "selectedCommonHeaders", "selectedCommonParams", "setup", "teardown", "showResult"])
   },
   data() {
     return {
@@ -244,29 +282,16 @@ export default {
           key: "",
           value: ""
         }
-      ]
+      ],
+      selectedCommonHeadersDummy: [],
+      selectedCommonParamsDummy: [],
     };
   },
   watch: {
     selectedApi: {
       immediate: true,
       handler: function(val) {
-          console.log('val', val);
-        let result = [];
-        try {
-          let header = JSON5.parse(this.selectedApi.header.header);
-          for (let [key, value] of Object.entries(header)) {
-            result.push({
-              checked: true,
-              key,
-              value
-            });
-          }
-        } catch (e) {
-          console.error(e);
-        }
         this.url = this.selectedApi.url;
-        this.headers = result;
         this.newHeaders = [
           {
             checked: false,
@@ -286,21 +311,70 @@ export default {
     selectedApiCase: {
       immediate: true,
       handler: function(val) {
-        let result = [];
+        let resultHeaders = [];
         try {
-          let params = JSON5.parse(this.selectedApiCase.param);
-          for (let [key, value] of Object.entries(params)) {
-            result.push({
-              checked: true,
-              key,
-              value
-            });
+          if (val && val.headers) {
+            let headers = JSON5.parse(val.headers);
+            for (let [key, value] of Object.entries(headers)) {
+              resultHeaders.push({
+                checked: true,
+                key,
+                value
+              });
+            }
           }
         } catch (e) {
           console.error(e);
         }
-        this.params = result;
+        this.headers = resultHeaders;
+        let resultParams = [];
+        try {
+          if (val && val.param) {
+            let params = JSON5.parse(val.param);
+            for (let [key, value] of Object.entries(params)) {
+              resultParams.push({
+                checked: true,
+                key,
+                value
+              });
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        if (val) {
+            console.log('val.setup_suite', val.setup_suite)
+          $("#apiCaseEditSetupSelector").selectpicker('val', val.setup_suite);
+          $("#apiCaseEditTeardownSelector").selectpicker('val', val.teardown);
+        }
+        this.params = resultParams;
       }
+    },
+    selectedCommonHeaders: {
+        immediate: true,
+        handler: function(val) {
+            if (Array.isArray(val)) {
+                this.selectedCommonHeadersDummy = val.map(item => {
+                    return {
+                        ...item,
+                        checked: true,
+                    }
+                });
+            }
+        }
+    },
+    selectedCommonParams: {
+        immediate: true,
+        handler: function(val) {
+            if (Array.isArray(val)) {
+                this.selectedCommonParamsDummy = val.map(item => {
+                    return {
+                        ...item,
+                        checked: true,
+                    }
+                });
+            }
+        } 
     }
   },
   methods: {
@@ -344,10 +418,18 @@ export default {
         url: this.url,
         headers: this.headers,
         params: this.params,
+        commonHeaders: this.selectedCommonHeadersDummy,
+        commonParams: this.selectedCommonParamsDummy,
         newHeaders: this.newHeaders,
         newParams: this.newParams,
       }
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      $("#apiCaseEditSetupSelector").selectpicker();
+      $("#apiCaseEditTeardownSelector").selectpicker();
+    });
   }
 };
 </script>

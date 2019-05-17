@@ -151,6 +151,44 @@
                                 <input class="form-control" v-model="valid" :class="{invalid: validValid === 0}"/>
                             </div>
                         </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">前置操作</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>参数</label>
+                                        <select id="apiCaseSetupSelector" data-live-search="true" class="form-control">
+                                          <option
+                                            v-for="(item, index) in setup"
+                                            :key="index"
+                                            :value="item.id"
+                                          >{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">后置操作</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>参数</label>
+                                        <select id="apiCaseTeardownSelector" data-live-search="true" class="form-control">
+                                          <option
+                                            v-for="(item, index) in teardown"
+                                            :key="index"
+                                            :value="item.id"
+                                          >{{item.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                          <button type="button" class="btn btn-success" data-dismiss="modal" @click="save" 
@@ -207,6 +245,8 @@
         "selectedApi",
         "selectedCommonHeaders", 
         "selectedCommonParams",
+        "setup",
+        "teardown",
       ]),
     },
     watch: {
@@ -223,7 +263,23 @@
             } else {
                 this.validValid = 1;
             }
-        }
+        },
+        setup: {
+            immediate: true,
+            handler: function(val) {
+                this.$nextTick(() => {
+                    $("#apiCaseSetupSelector").selectpicker("refresh");
+                });
+            }
+        },
+        teardown: {
+            immediate: true,
+            handler: function(val) {
+                this.$nextTick(() => {
+                    $("#apiCaseTeardownSelector").selectpicker("refresh");
+                });
+            }
+        },
     },
     methods: {
       addNewHeader() {
@@ -257,6 +313,10 @@
           valid: this.valid,
         });
       }
+    },
+    mounted() {
+      $("#apiCaseSetupSelector").selectpicker();
+      $("#apiCaseTeardownSelector").selectpicker();
     }
   };
 </script>

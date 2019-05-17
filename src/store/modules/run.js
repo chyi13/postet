@@ -21,12 +21,19 @@ const run = {
     actions: {
         async DO_REQUEST({ commit, state, rootState }, dataToSend) {
             const { apiCases, selectedApi } = rootState.core;
-            const { headers: requestHeaders = [], newHeaders = [], params: requestParams = [], newParams = [], url } = dataToSend;
+            const { headers: requestHeaders = [], newHeaders = [], commonHeaders = [], 
+                     params: requestParams = [], newParams = [], commonParams = [], 
+                    url } = dataToSend;
             commit('CLEAR_RESULT');
             console.log('DO_REQUEST');
             if (url) {
                 // merge origin and new headers
                 let realReqHeaders = {};
+                commonHeaders.map((item) => {
+                    if (item.key && item.value && item.checked) {
+                        realReqHeaders[item.key] = item.value;
+                    }
+                });
                 requestHeaders.map((item) => {
                     if (item.key && item.value && item.checked) {
                         realReqHeaders[item.key] = item.value;
@@ -39,6 +46,11 @@ const run = {
                 });
                 // merge origin and new params
                 let realReqParams = {};
+                commonParams.map((item) => {
+                    if (item.key && item.value && item.checked) {
+                        realReqParams[item.key] = item.value;
+                    }
+                });
                 requestParams.map((item) => {
                     if (item.key && item.value && item.checked) {
                         realReqParams[item.key] = item.value;

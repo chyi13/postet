@@ -1,4 +1,4 @@
-import {TEST_API_URL, TEST_CASES_URL, COMMON_HEADERS_URL, COMMON_PARAMS_URL, COMMON_VALID_URL} from '../constants';
+import { TEST_API_URL, TEST_CASES_URL, COMMON_HEADERS_URL, COMMON_PARAMS_URL, COMMON_VALID_URL, SETUP_URL, TEARDOWN_URL } from '../constants';
 import { fetchByAjax, fetchByCrossRequest } from '../utils';
 
 /**
@@ -66,6 +66,53 @@ export async function createApiCase({valid, header, param, name, api}) {
     }
 } 
 
+export async function fetchSetup() {
+    let setup = [];
+    let pageId = 0;
+    let url = SETUP_URL;
+    while(true) {
+        try {
+            url = SETUP_URL + '?&page_size=500&pageId=' + pageId;
+            const result = await fetchDelegate(url);
+            if (result && Array.isArray(result.results)) {
+                setup = setup.concat(result.results);
+                if (!result.next) {
+                    break;
+                } else {
+                    pageId++;
+                }
+            } else {
+               break;
+            }
+        } catch(e) {
+        }
+    }
+    return setup;
+}
+
+export async function fetchTeardown() {
+    let teardown = [];
+    let pageId = 0;
+    let url = TEARDOWN_URL;
+    while(true) {
+        try {
+            url = TEARDOWN_URL + '?&page_size=500&pageId=' + pageId;
+            const result = await fetchDelegate(url);
+            if (result && Array.isArray(result.results)) {
+                teardown = teardown.concat(result.results);
+                if (!result.next) {
+                    break;
+                } else {
+                    pageId++;
+                }
+            } else {
+               break;
+            }
+        } catch(e) {
+        }
+    }
+    return teardown;
+}
 
 /**
  * delete test api

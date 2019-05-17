@@ -1,4 +1,4 @@
-import { fetchApis, fetchAPICases, fetchCommonHeaders, fetchCommonParams, fetchCommonValid } from "../../core/core";
+import { fetchApis, fetchAPICases, fetchCommonHeaders, fetchCommonParams, fetchCommonValid, fetchSetup, fetchTeardown } from "../../core/core";
 import { parseCommonData } from "../../utils"; 
 
 const core = {
@@ -12,6 +12,8 @@ const core = {
         commonHeaders: [],  // 所有公共请求头
         commonParams: [],   // 所有公共请求参数
         commonValid: [],    // 所有公共校验
+        setup: [],  // 前置操作
+        teardown: [], // 后置操作
     },
     mutations: {
         SET_APIS(state, apis) {
@@ -41,6 +43,12 @@ const core = {
         SET_SELECTED_COMMON_PARAMS(state, selectedCommonParams) {
             state.selectedCommonParams = selectedCommonParams;
         },
+        SET_SETUP(state, setup) {
+            state.setup = setup;
+        },
+        SET_TEARDOWN(state, teardown) {
+            state.teardown = teardown;
+        }
     },
     actions: {
         async INIT_CORE({commit, dispatch}) {
@@ -48,6 +56,8 @@ const core = {
             dispatch("UPDATE_COMMON_HEADERS");
             dispatch("UPDATE_COMMON_PARAMS");
             dispatch("UPDATE_COMMON_VALID");
+            dispatch("UPDATE_SETUP");
+            dispatch("UPDATE_TEARDOWN");
         },
         async UPDATE_APIS({commit}) {
             const apis = await fetchApis();
@@ -64,6 +74,26 @@ const core = {
         async UPDATE_COMMON_VALID({commit}) {
             const commonValid = await fetchCommonValid();
             commit('SET_COMMON_VALID', commonValid);
+        },
+        async UPDATE_SETUP({commit}) {
+            const setup = await fetchSetup();
+            if (Array.isArray(setup)) {
+                setup.push({
+                    name: '无',
+                    id: null,
+                });
+                commit('SET_SETUP', setup);
+            }
+        },
+        async UPDATE_TEARDOWN({commit}) {
+            const teardown = await fetchTeardown();
+            if (Array.isArray(teardown)) {
+                teardown.push({
+                    name: '无',
+                    id: null,
+                });
+                commit('SET_TEARDOWN', teardown);
+            }
         },
         UPDATE_SELECTED_API({commit, state, dispatch}, selectedApi) {
             console.log('selected', selectedApi);

@@ -5,6 +5,9 @@ export const COMMON_HEADERS_URL = BASE_URL + '/case/common/header/';
 export const COMMON_PARAMS_URL = BASE_URL + '/case/common/param/';
 export const COMMON_VALID_URL = BASE_URL + '/case/common/valid/';
 
+export const SETUP_URL = BASE_URL + '/case/setup/';
+export const TEARDOWN_URL = BASE_URL + '/case/teardown/';
+
 export const MODAL_TYPE_NONE = '';
 export const MODAL_TYPE_API = 'modalApi';
 export const MODAL_TYPE_API_CASE = 'modalApiCase';
