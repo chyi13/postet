@@ -93,11 +93,11 @@ export default {
     },
     onSearchInputChange() {
       if (this.apiSearchInput) {
-        this.apiIdsDummy = this.apiIds.filter(
+        this.apiIdsDummy = this.apis.filter(
           item => item.name.indexOf(this.apiSearchInput) > -1
         );
       } else {
-        this.apiIdsDummy = this.apiIds.map(item => {
+        this.apiIdsDummy = this.apis.map(item => {
           return { ...item };
         });
       }

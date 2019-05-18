@@ -159,7 +159,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>参数</label>
-                                        <select id="apiCaseSetupSelector" data-live-search="true" class="form-control">
+                                        <select id="apiCaseSetupSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in setup"
                                             :key="index"
@@ -178,7 +178,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>参数</label>
-                                        <select id="apiCaseTeardownSelector" data-live-search="true" class="form-control">
+                                        <select id="apiCaseTeardownSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in teardown"
                                             :key="index"
@@ -276,6 +276,7 @@
             immediate: true,
             handler: function(val) {
                 this.$nextTick(() => {
+                  
                     $("#apiCaseTeardownSelector").selectpicker("refresh");
                 });
             }

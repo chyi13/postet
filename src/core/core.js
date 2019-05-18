@@ -1,4 +1,4 @@
-import { TEST_API_URL, TEST_CASES_URL, COMMON_HEADERS_URL, COMMON_PARAMS_URL, COMMON_VALID_URL, SETUP_URL, TEARDOWN_URL } from '../constants';
+import { TEST_API_URL, TEST_CASES_URL, COMMON_HEADERS_URL, COMMON_PARAMS_URL, COMMON_VALID_URL, SETUP_URL, TEARDOWN_URL, REQUEST_SUCCESS, REQUEST_FAILED } from '../constants';
 import { fetchByAjax, fetchByCrossRequest } from '../utils';
 
 /**
@@ -43,7 +43,8 @@ export async function createApi({valid, header, param, name, url, stag_url, onli
                 valid, header, param, name, url, stag_url, online_url
             }
         );
-        console.log('create', result);
+        console.log('resultttt', result);
+        return result;
     }
 }
 
@@ -73,8 +74,8 @@ export async function fetchSetup() {
     while(true) {
         try {
             url = SETUP_URL + '?&page_size=500&pageId=' + pageId;
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
                 setup = setup.concat(result.results);
                 if (!result.next) {
                     break;
@@ -97,10 +98,10 @@ export async function fetchTeardown() {
     while(true) {
         try {
             url = TEARDOWN_URL + '?&page_size=500&pageId=' + pageId;
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                teardown = teardown.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                teardown = teardown.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -135,10 +136,10 @@ export async function fetchApis() {
     while(true) {
         try {
             url = TEST_API_URL + '?page=' + pageId + '&page_size=500';
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                apis = apis.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                apis = apis.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -161,10 +162,10 @@ export async function fetchCommonHeaders() {
     while(true) {
         try {
             url = COMMON_HEADERS_URL + '?page=' + pageId + '&page_size=500';
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                headers = headers.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                headers = headers.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -187,10 +188,10 @@ export async function fetchCommonParams() {
     while(true) {
         try {
             url = COMMON_PARAMS_URL + '?page=' + pageId + '&page_size=500';
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                params = params.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                params = params.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -213,10 +214,10 @@ export async function fetchCommonValid() {
     while(true) {
         try {
             url = COMMON_VALID_URL + '?page=' + pageId + '&page_size=500';
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                params = params.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                params = params.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -231,11 +232,24 @@ export async function fetchCommonValid() {
 
 async function fetchDelegate(url, method = 'GET', headers = {}, data = {}) {
     try {
-        const result = await fetchByCrossRequest(url, method, headers, data);
-        if (result && result.body && JSON.parse(result.body)) {
-            return JSON.parse(result.body);
+        const {res: {header, body, status} = {}} = await fetchByCrossRequest(url, method, headers, data);
+        if (status === 200 || status === 201) {
+          return {
+            status: REQUEST_SUCCESS,
+            header,
+            body: JSON.parse(body),
+          }
+        } else {
+          return {
+            status: REQUEST_FAILED,
+            header,
+            body: JSON.parse(body),
+          }
         }
     } catch(e) {
-        return null;
+      console.log(e)
+        return {
+          status: REQUEST_FAILED,
+        }
     }
 }

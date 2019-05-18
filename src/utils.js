@@ -29,15 +29,11 @@ export async function fetchByCrossRequest(url, method = 'GET', headers = {}, dat
     return new Promise(function(resolve, reject){
         crossRequest({
             ...request,
-            success: function (body, header) {
-                resolve({
-                    body,
-                    header,
-                });
+            success: function (body, header, data) {
+                resolve({...data});
             },
-            error: function(err, msg, b) {
-                console.log(err, msg, b);
-                reject(err);
+            error: function(err, msg, data) {
+                resolve({...data});
             }
         })
     })

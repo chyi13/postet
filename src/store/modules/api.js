@@ -31,11 +31,12 @@ const api = {
       commit('SHOW_MODAL', MODAL_TYPE_API);
       commit('UPDATE_TYPE', TYPE_ADD);
     },
-    async SAVE_NEW_API({state, commit}, newApiData) {
+    async SAVE_NEW_API({state, commit, rootState}, newApiData) {
       commit('HIDE_MODAL');
       console.log('newApiData', newApiData);
       const {valid, header, param, name, url, stag_url, online_url} = newApiData;
-      createApi({valid, header, param, name, url, stag_url, online_url});
+      const result = createApi({valid, header, param, name, url, stag_url, online_url});
+      console.log('result', result);
     },
     async DELETE_API({state, commit}, apiToDelete) {
       console.log('delete', apiToDelete);  

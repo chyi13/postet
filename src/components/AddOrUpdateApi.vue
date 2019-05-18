@@ -6,7 +6,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add new api</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">添加新的API</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                 @click="onBackdropClicked">
                             <span aria-hidden="true">&times;</span>
@@ -21,21 +21,21 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="apiName" class="control-label">name<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" :class="{invalid: apiNameValid === 0}" id="apiName" v-model="apiNameVal" placeHolder="接口名称..."/>
+                                        <input type="text" class="form-control form-control-sm" :class="{invalid: apiNameValid === 0}" id="apiName" v-model="apiNameVal" placeHolder="接口名称..."/>
                                     </div>
                                     <!--<div class="mb-1 small">创建时间:</div>-->
                                     <!--<p>{{selectedApiCase.create_time}}</p>-->
                                     <div class="form-group">
                                         <label for="apiUrl" class="control-label">url<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" :class="{invalid: apiUrlValid === 0}" id="apiUrl" v-model="apiUrlVal" placeHolder="https://"/>
+                                        <input type="text" class="form-control form-control-sm" :class="{invalid: apiUrlValid === 0}" id="apiUrl" v-model="apiUrlVal" placeHolder="https://"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="apiStageUrl" class="control-label">stage url<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" :class="{invalid: apiStageUrlValid === 0}" id="apiStageUrl" v-model="apiStageUrlVal" placeHolder="https://"/>
+                                        <input type="text" class="form-control form-control-sm" :class="{invalid: apiStageUrlValid === 0}" id="apiStageUrl" v-model="apiStageUrlVal" placeHolder="https://"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="apiOnlineUrl" class="control-label">online url<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" :class="{invalid: apiOnlineUrlValid === 0}" id="apiOnlineUrl" v-model="apiOnlineUrlVal" placeHolder="https://"/>
+                                        <input type="text" class="form-control form-control-sm" :class="{invalid: apiOnlineUrlValid === 0}" id="apiOnlineUrl" v-model="apiOnlineUrlVal" placeHolder="https://"/>
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Headers</label>
-                                        <select id="commonHeaderSelector" data-live-search="true" class="form-control">
+                                        <select id="commonHeaderSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in commonHeaders"
                                             :key="index"
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Params</label>
-                                        <select id="commonParamSelector" data-live-search="true" class="form-control">
+                                        <select id="commonParamSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in commonParams"
                                             :key="index"
@@ -77,7 +77,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>参数</label>
-                                        <select id="commonValidSelector" data-live-search="true" class="form-control">
+                                        <select id="commonValidSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in commonValid"
                                             :key="index"
@@ -96,7 +96,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>参数</label>
-                                        <select id="setupSelector" data-live-search="true" class="form-control">
+                                        <select id="setupSelector" data-live-search="true" class="form-control form-control-sm">
                                           <option
                                             v-for="(item, index) in setup"
                                             :key="index"
@@ -149,9 +149,12 @@
       ...mapGetters([
         'showAddModal',
         'commonHeaders',
+        'defaultCommonHeader',
         'commonParams',
+        'defaultCommonParam',
         'commonValid',
         'setup',
+        'defaultSetup',
         'teardown',
       ]),
     },
@@ -159,25 +162,34 @@
         commonHeaders: {
             immediate: true,
             handler: function(val) {
-                 $("#commonHeaderSelector").selectpicker("refresh");
+              this.$nextTick(() => {
+                $("#commonHeaderSelector").selectpicker("val", this.defaultCommonHeader.id);
+              });
+              
             }
         },
         commonParams: {
             immediate: true,
             handler: function(val) {
-                 $("#commonParamSelector").selectpicker("refresh");
+              this.$nextTick(() => {
+                $("#commonParamSelector").selectpicker("val", this.defaultCommonParam.id);
+              })
             }
         },
         commonValid: {
             immediate: true,
             handler: function(val) {
-                 $("#commonValidSelector").selectpicker("refresh");
+              this.$nextTick(() => {
+                $("#commonValidSelector").selectpicker("refresh");
+              });
             }
         },
         setup: {
             immediate: true,
             handler: function(val) {
-                 $("#setupSelector").selectpicker("refresh");
+              this.$nextTick(() => {
+                $("#setupSelector").selectpicker("val", this.defaultSetup.id); 
+              });
             }
         },
         apiNameVal: {

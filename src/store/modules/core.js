@@ -130,6 +130,9 @@ const core = {
             console.log('targetAPICase', targetAPICase);
             commit('SET_SELECTED_API_CASE', targetAPICase);
         },
+        CLEAR_SELECT_API_CASE({commit, state}) {
+          commit('SET_SELECTED_API_CASE', null);
+        }
     }
 };
 

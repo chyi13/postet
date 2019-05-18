@@ -16,3 +16,6 @@ export const TYPE_NONE = '';
 export const TYPE_ADD = 'add';
 export const TYPE_EDIT = 'edit';
 export const TYPE_DELETE = 'delete';
+
+export const REQUEST_SUCCESS = 'success';
+export const REQUEST_FAILED = 'fail';

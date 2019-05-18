@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       <!-- Default Card Example -->
-      <div class="card mb-4">
+      <div class="card shadow mb-4">
         <div class="card-header">
           <h6 class="m-0 font-weight-bold text-primary">接口</h6>
         </div>
@@ -73,6 +73,8 @@ export default {
         this.$nextTick(() => {
           $("#run_selector").selectpicker("refresh");
         });
+      } else {
+        this.$store.dispatch("CLEAR_SELECT_API_CASE");
       }
     }
   },

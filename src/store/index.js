@@ -5,6 +5,7 @@ import run from './modules/run';
 import core from './modules/core';
 import apiCase from './modules/apiCase';
 import api from "./modules/api";
+import waitingfor from "./modules/waitingfor";
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ const store = new Vuex.Store({
         core,
         apiCase,
         api,
+        waitingfor,
     },
     getters
 });
