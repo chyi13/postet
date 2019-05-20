@@ -12,10 +12,10 @@ export async function fetchAPICases(apiId) {
     while(true) {
         try {
             url = TEST_CASES_URL + '?api=' + apiId + '&page_size=500&pageId=' + pageId;
-            const result = await fetchDelegate(url);
-            if (result && Array.isArray(result.results)) {
-                apiCases = apiCases.concat(result.results);
-                if (!result.next) {
+            const {status, body} = await fetchDelegate(url);
+            if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
+                apiCases = apiCases.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;
@@ -33,38 +33,42 @@ export async function fetchAPICases(apiId) {
  * create new api
  */
 export async function createApi({valid, header, param, name, url, stag_url, online_url, setup_suite}) {
+    let result = {
+      status: REQUEST_FAILED,
+    }
     if (valid && header && param && name && url && stag_url && online_url) {
         let postURL = TEST_API_URL;
-        const result = await fetchDelegate(postURL, 'POST', 
+        result = await fetchDelegate(postURL, 'POST', 
             {  
                 'Content-Type': 'application/json'
             },
             {
-                valid, header, param, name, url, stag_url, online_url
+                valid, header, param, name, url, stag_url, online_url, setup_suite: Number(setup_suite)
             }
         );
-        console.log('resultttt', result);
-        return result;
     }
+    return result;
 }
 
 /**
  * create new api case
  */
-export async function createApiCase({valid, header, param, name, api}) {
-    console.log('valid, header, param, name, api', valid, header, param, name, api)
-    if (name && api) {
+export async function createApiCase({valid, header, param, name, api, setup_suite, teardown}) {
+    let result = {
+      status: REQUEST_FAILED,
+    }
+    if (name && api && setup_suite && teardown) {
         let postURL = TEST_CASES_URL;
-        const result = await fetchDelegate(postURL, 'POST', 
+        result = await fetchDelegate(postURL, 'POST', 
             {  
                 'Content-Type': 'application/json'
             },
             {
-                valid, header, param, name, api
+                valid, header, param, name, api, setup_suite: Number(setup_suite), teardown: Number(teardown),
             }
         );
-        console.log('create', result);
     }
+    return result;
 } 
 
 export async function fetchSetup() {
@@ -76,8 +80,8 @@ export async function fetchSetup() {
             url = SETUP_URL + '?&page_size=500&pageId=' + pageId;
             const {status, body} = await fetchDelegate(url);
             if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
-                setup = setup.concat(result.results);
-                if (!result.next) {
+                setup = setup.concat(body.results);
+                if (!body.next) {
                     break;
                 } else {
                     pageId++;

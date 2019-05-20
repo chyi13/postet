@@ -119,6 +119,7 @@ const core = {
             if (selectedApiId) {
                 // request api cases
                 const apiCases = await fetchAPICases(selectedApiId);
+                console.log('apiCases', apiCases)
                 commit('SET_API_CASES', apiCases);
             }
         },

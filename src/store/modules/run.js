@@ -65,7 +65,7 @@ const run = {
                 // scroll to location
                 document.getElementById("runningResult").scrollIntoView();
                 try {
-                    const { header, body } = await fetchByCrossRequest(
+                    const {res: {header, body, status} = {}} = await fetchByCrossRequest(
                         url,
                         'GET',
                         realReqHeaders,

@@ -4,7 +4,7 @@
     <div id="api_edit_header_name" class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">{{selectedApi.name}}</h1>
     </div>
-    <Run @onSend="onSend"></Run>
+    <Run @onSend="onSend" @onSave="onSave"></Run>
     <div v-if="selectedApiCase">
       <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -437,6 +437,19 @@ export default {
         newHeaders: this.newHeaders,
         newParams: this.newParams,
       }
+    },
+    onSave() {
+      this.$store.dispatch('SAVE_OLD_API_CASE', {
+        name: this.selectedApiCase.name,
+        method: '',
+        api: this.selectedApi.id,
+        id: this.selectedApiCase.id,
+        headers: this.headers.filter((item) => item.key && item.value),
+        params: this.params.filter((item) => item.key && item.value),
+        valid: this.valid,
+        setup_suite: $("#apiCaseEditSetupSelector").val(),
+        teardown: $("#apiCaseEditTeardownSelector").val(),
+      });
     }
   },
   mounted() {

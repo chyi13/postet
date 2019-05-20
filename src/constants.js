@@ -19,3 +19,8 @@ export const TYPE_DELETE = 'delete';
 
 export const REQUEST_SUCCESS = 'success';
 export const REQUEST_FAILED = 'fail';
+
+export const WAITINGFOR_TYPE_SUCCESS = 'success';
+export const WAITINGFOR_TYPE_DANGER = 'danger';
+export const WAITINGFOR_TYPE_WARNING = 'warning';
+export const WAITINGFOR_TYPE_INFO = 'info';

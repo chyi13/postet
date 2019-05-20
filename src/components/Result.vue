@@ -5,7 +5,9 @@
         <h6 class="m-0 font-weight-bold text-primary">Reponse</h6>
       </div>
       <div class="card-body">
+        <div class="mb-1">Headers</div>
         <json-viewer :value="jsonHeader" :expand-depth="5" copyable boxed sort></json-viewer>
+        <div class="mb-1">Body</div>
         <json-viewer :value="jsonBody" :expand-depth="5" copyable boxed sort></json-viewer>
       </div>
     </div>

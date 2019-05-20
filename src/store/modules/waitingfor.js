@@ -1,4 +1,4 @@
-import waitingDialog from "bootstrap-waitingfor";
+import { WAITINGFOR_TYPE_INFO } from "../../constants";
 
 const waitingfor = {
     state: {
@@ -7,16 +7,21 @@ const waitingfor = {
         
     },
     mutations: {
-        SHOW_WAITING(state, {type, text}) {
+        SHOW_WAITING(state, {type = WAITINGFOR_TYPE_INFO, text}) {
           state.type = type;
           state.text = text;
           waitingDialog.show(text, {
              dialogSize: 'm',
-              progressType: type,
+             progressType: type,
           }) 
         },
-        HIDE_WAITING(state) {
-          waitingDialog.hide();
+        HIDE_WAITING(state, callback) {
+          setTimeout(() => {
+            waitingDialog.hide();
+            if (typeof callback === 'undefined') {
+              callback();
+            }
+          }, 500);
         }
     },
 };

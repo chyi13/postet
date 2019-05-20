@@ -192,7 +192,7 @@
                     </div>
                     <div class="modal-footer">
                          <button type="button" class="btn btn-success" data-dismiss="modal" @click="save" 
-                            :disabled="newApiNameValValid < 1 && validValid < 1">
+                            :disabled="newApiNameValValid < 1 || validValid < 1">
                             Save
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="onBackdropClicked">
@@ -246,7 +246,9 @@
         "selectedCommonHeaders", 
         "selectedCommonParams",
         "setup",
+        "defaultSetup",
         "teardown",
+        "defaultTeardown",
       ]),
     },
     watch: {
@@ -268,7 +270,11 @@
             immediate: true,
             handler: function(val) {
                 this.$nextTick(() => {
-                    $("#apiCaseSetupSelector").selectpicker("refresh");
+                    if (this.selectedApi.setup) {
+                      $("#apiCaseSetupSelector").selectpicker("val", this.selectedApi.setup);
+                    } else {
+                      $("#apiCaseSetupSelector").selectpicker("val", this.defaultSetup.id)
+                    }
                 });
             }
         },
@@ -276,8 +282,12 @@
             immediate: true,
             handler: function(val) {
                 this.$nextTick(() => {
-                  
-                    $("#apiCaseTeardownSelector").selectpicker("refresh");
+                    if (this.selectedApi.teardown) {
+                      console.log("this.selectedApi.teardown", this.selectedApi.teardown)
+                      $("#apiCaseTeardownSelector").selectpicker('val', this.selectedApi.teardown);
+                    } else {
+                      $("#apiCaseTeardownSelector").selectpicker('val', this.defaultTeardown.id);
+                    }
                 });
             }
         },
@@ -312,6 +322,8 @@
           headers: this.headers.filter((item) => item.key && item.value),
           params: this.params.filter((item) => item.key && item.value),
           valid: this.valid,
+          setup_suite: $("#apiCaseSetupSelector").val(),
+          teardown: $("#apiCaseTeardownSelector").val(),
         });
       }
     },

@@ -12,9 +12,9 @@
               <div class="input-group-prepend">
                 <select id="methods_selector" class="form-control">
                   <option value="GET">GET</option>
-                  <option value="POST">POST</option>
-                  <option value="PUT">PUT</option>
-                  <option value="DELETE">DELETE</option>
+               <!--<option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option> -->
                 </select>
               </div>
               <div class="col-md-10">
@@ -35,7 +35,7 @@
                 <button class="btn btn-warning mr-1" @click="addNewApiCase">
                   <i class="fas fa-plus fa-sm"></i>
                 </button>
-                <button class="btn btn-danger" @click="addNewApiCase">
+                <button class="btn btn-danger" @click="saveOldApiCase">
                   <i class="fas fa-save fa-sm"></i>
                 </button>
               </div>
@@ -84,6 +84,9 @@ export default {
     },
     addNewApiCase() {
       this.$store.dispatch('ADD_NEW_API_CASE')
+    },
+    saveOldApiCase() {
+      this.$emit('onSave');
     },
   },
   mounted() {

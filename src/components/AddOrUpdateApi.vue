@@ -155,7 +155,6 @@
         'commonValid',
         'setup',
         'defaultSetup',
-        'teardown',
       ]),
     },
     watch: {
@@ -242,6 +241,7 @@
           param: $("#commonParamSelector").val(),
           header: $("#commonHeaderSelector").val(),
           valid: $("#commonValidSelector").val(),
+          setup_suite: $("#setupSelector").val(),
         });
       }
     },
@@ -251,7 +251,6 @@
             $("#commonParamSelector").selectpicker();
             $("#commonValidSelector").selectpicker();
             $("#setupSelector").selectpicker();
-            $("#teardownSelector").selectpicker();
         });
     }
   };
