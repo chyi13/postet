@@ -12,9 +12,9 @@
               <div class="input-group-prepend">
                 <select id="methods_selector" class="form-control">
                   <option value="GET">GET</option>
-               <!--<option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option> -->
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="DELETE">DELETE</option>
                 </select>
               </div>
               <div class="col-md-10">
@@ -67,15 +67,17 @@ export default {
   },
   watch: {
     apiCases: function(newValue, oldValue) {
-        console.log('apiCasessss', newValue);
+      let method = 'GET';
       if (Array.isArray(newValue) && newValue.length > 0) {
+        method = newValue[0].method;
         this.$store.dispatch("UPDATE_SELECT_API_CASE", newValue[0].id);
-        this.$nextTick(() => {
-          $("#run_selector").selectpicker("refresh");
-        });
       } else {
         this.$store.dispatch("CLEAR_SELECT_API_CASE");
       }
+      this.$nextTick(() => {
+        $("#run_selector").selectpicker("refresh");
+        $("#methods_selector").selectpicker("val", method);
+      });
     }
   },
   methods: {

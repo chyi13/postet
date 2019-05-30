@@ -37,9 +37,6 @@
           @mouseover="onAPIHover(item)"
           @click="onAPIClicked(item)"
         ><span class="d-inline-block text-truncate" :class="{'max_width_hover': item.hover, 'max_width': !item.hover}">{{item.name}}</span>
-        <div class="float-right" @click="editApi(item)">
-         <i v-if="item.hover" class="fas fa-edit"></i>
-        </div>
         </div>
       </div>
     </li>

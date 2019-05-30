@@ -384,7 +384,7 @@ h2, .h2 {
 }
 
 h3, .h3 {
-  font-size: 1.75rem;
+  font-size: 1.45rem;
 }
 
 h4, .h4 {
@@ -5604,7 +5604,7 @@ a.badge-dark:focus, a.badge-dark.focus {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 1rem;
+  height: 20px;
   overflow: hidden;
   font-size: 0.75rem;
   background-color: #eaecf4;

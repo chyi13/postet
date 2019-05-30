@@ -15,6 +15,9 @@
                 <div v-if="selectedApi" class="col-lg-8">
                   <Edit ref="edit"></Edit>
                 </div>
+                <div v-else class="col-lg-12">
+                  <readme />
+                </div>
               </div>
             </div>
           </section>
@@ -65,7 +68,7 @@ export default {
     Edit,
     Run,
     Result,
-    TopBar
+    TopBar,
   },
   methods: {
     onRunSend() {

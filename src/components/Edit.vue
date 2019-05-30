@@ -72,7 +72,7 @@
                     <td>
                       <input
                         type="checkbox"
-                        class="form-control"
+                        class="form-control form-control-sm"
                         v-model="item.checked"
                         @input="onHeaderChecked(item)"
                       >
@@ -140,7 +140,7 @@
             </div>
             <div class="form-group">
               <label>Params</label>
-              <table class="table table-bordered table-center  table-sm">
+              <table class="table table-bordered table-center table-sm">
                 <thead>
                   <tr>
                     <th></th>
@@ -313,55 +313,72 @@ export default {
     selectedApiCase: {
       immediate: true,
       handler: function(val) {
-        if (!val) { // 无数据, 置空
+        this.$nextTick(() => {
           this.headers = [];
           this.params = [];
-          $("#apiCaseEditSetupSelector").selectpicker('val', this.defaultSetup.id);
-          $("#apiCaseEditTeardownSelector").selectpicker('val', this.defaultTeardown.id);
-          return;
-        }
-        let resultHeaders = [];
-        try {
-          if (val.headers) {
-            let headers = JSON5.parse(val.headers);
-            for (let [key, value] of Object.entries(headers)) {
-              resultHeaders.push({
-                checked: true,
-                key,
-                value
-              });
+          this.newHeaders = [
+            {
+              checked: false,
+              key: "",
+              value: ""
             }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-        this.headers = resultHeaders;
-        let resultParams = [];
-        try {
-          if (val.param) {
-            let params = JSON5.parse(val.param);
-            for (let [key, value] of Object.entries(params)) {
-              resultParams.push({
-                checked: true,
-                key,
-                value
-              });
+          ];
+          this.newParams = [
+            {
+              checked: false,
+              key: "",
+              value: ""
             }
+          ]
+          if (!val) { // 无数据, 置空
+            
+            $("#apiCaseEditSetupSelector").selectpicker('val', this.defaultSetup.id);
+            $("#apiCaseEditTeardownSelector").selectpicker('val', this.defaultTeardown.id);
+            return;
           }
-        } catch (e) {
-          console.error(e);
-        }
-        this.params = resultParams;
-        if (val.setup_suite) {
-          $("#apiCaseEditSetupSelector").selectpicker('val', val.setup_suite);
-        } else { // 没有前置方法选择默认前置方法
-          $("#apiCaseEditSetupSelector").selectpicker('val', this.defaultSetup.id);
-        }
-        if (val.teardown) {
-          $("#apiCaseEditTeardownSelector").selectpicker('val', val.teardown);
-        } else { // 没有后置方法选择默认后置方法
-          $("#apiCaseEditTeardownSelector").selectpicker('val', this.defaultTeardown.id);
-        }
+          let resultHeaders = [];
+          try {
+            if (val.headers) {
+              let headers = JSON5.parse(val.headers);
+              for (let [key, value] of Object.entries(headers)) {
+                resultHeaders.push({
+                  checked: true,
+                  key,
+                  value
+                });
+              }
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          this.headers = resultHeaders;
+          let resultParams = [];
+          try {
+            if (val.param) {
+              let params = JSON5.parse(val.param);
+              for (let [key, value] of Object.entries(params)) {
+                resultParams.push({
+                  checked: true,
+                  key,
+                  value
+                });
+              }
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          this.params = resultParams;
+          if (val.setup_suite) {
+            $("#apiCaseEditSetupSelector").selectpicker('val', val.setup_suite);
+          } else { // 没有前置方法选择默认前置方法
+            $("#apiCaseEditSetupSelector").selectpicker('val', this.defaultSetup.id);
+          }
+          if (val.teardown) {
+            $("#apiCaseEditTeardownSelector").selectpicker('val', val.teardown);
+          } else { // 没有后置方法选择默认后置方法
+            $("#apiCaseEditTeardownSelector").selectpicker('val', this.defaultTeardown.id);
+          }
+        });
       }
     },
     selectedCommonHeaders: {
@@ -389,6 +406,22 @@ export default {
                 });
             }
         } 
+    },
+    setup: {
+      immediate: true,
+      handler: function(val) {
+        this.$nextTick(() => {
+          $("#apiCaseEditSetupSelector").selectpicker('render');  
+        })
+      } 
+    },
+    teardown: {
+      immediate: true,
+      handler: function(val) {
+        this.$nextTick(() => {
+          $("#apiCaseEditTeardownSelector").selectpicker('render');  
+        })
+      }
     }
   },
   methods: {
@@ -429,7 +462,8 @@ export default {
     },
     getAllEditData() {
       return {
-        url: this.url,
+        method: $("#methods_selector").val(),
+        url: this.url ? this.url.replace('http://10.10', 'http://172.19') : '',
         headers: this.headers,
         params: this.params,
         commonHeaders: this.selectedCommonHeadersDummy,
@@ -441,11 +475,11 @@ export default {
     onSave() {
       this.$store.dispatch('SAVE_OLD_API_CASE', {
         name: this.selectedApiCase.name,
-        method: '',
+        method: $("#methods_selector").val(),
         api: this.selectedApi.id,
         id: this.selectedApiCase.id,
-        headers: this.headers.filter((item) => item.key && item.value),
-        params: this.params.filter((item) => item.key && item.value),
+        headers: this.headers.concat(this.newHeaders),
+        params: this.params.concat(this.newParams),
         valid: this.valid,
         setup_suite: $("#apiCaseEditSetupSelector").val(),
         teardown: $("#apiCaseEditTeardownSelector").val(),

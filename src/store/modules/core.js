@@ -96,7 +96,6 @@ const core = {
             }
         },
         UPDATE_SELECTED_API({commit, state, dispatch}, selectedApi) {
-            console.log('selected', selectedApi);
             if (selectedApi && selectedApi.id) {
                 // clear api cases
                 commit('SET_API_CASES', []);
@@ -119,7 +118,6 @@ const core = {
             if (selectedApiId) {
                 // request api cases
                 const apiCases = await fetchAPICases(selectedApiId);
-                console.log('apiCases', apiCases)
                 commit('SET_API_CASES', apiCases);
             }
         },
@@ -128,7 +126,6 @@ const core = {
             const targetAPICase = apiCases.find((item) => {
                 return Number(item.id) === Number(selectedApiCaseId);
             });
-            console.log('targetAPICase', targetAPICase);
             commit('SET_SELECTED_API_CASE', targetAPICase);
         },
         CLEAR_SELECT_API_CASE({commit, state}) {

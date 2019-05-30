@@ -1,4 +1,5 @@
 import { fetchByCrossRequest, fetchByAjax } from "../../utils";
+import { WAITINGFOR_TYPE_INFO } from "../../constants";
 
 const run = {
     state: {
@@ -23,9 +24,8 @@ const run = {
             const { apiCases, selectedApi } = rootState.core;
             const { headers: requestHeaders = [], newHeaders = [], commonHeaders = [], 
                      params: requestParams = [], newParams = [], commonParams = [], 
-                    url } = dataToSend;
+                    url, method = 'GET' } = dataToSend;
             commit('CLEAR_RESULT');
-            console.log('DO_REQUEST');
             if (url) {
                 // merge origin and new headers
                 let realReqHeaders = {};
@@ -62,23 +62,28 @@ const run = {
                     }
                 });
                 commit('SHOW_RESULT');
+                commit('SHOW_WAITING', {type: WAITINGFOR_TYPE_INFO, text: '请求中...'}, {root: true});
                 // scroll to location
                 document.getElementById("runningResult").scrollIntoView();
                 try {
                     const {res: {header, body, status} = {}} = await fetchByCrossRequest(
                         url,
-                        'GET',
+                        method,
                         realReqHeaders,
                         realReqParams,
                     );
                     if (header && body) {
                         state.headers = header;
                         state.body = body;
+                    } else {
+                      state.headers = {msg: 'CrossRequest请求失败'};
+                      state.body = {msg: 'CrossRequest请求失败'};
                     }
                 } catch (e) {
-                    state.headers = {};
-                    state.body = {};
+                  state.headers = {msg: 'CrossRequest请求失败'};
+                  state.body = e;
                 }
+                commit('HIDE_WAITING', {}, {root: true});
             }
         }
     }

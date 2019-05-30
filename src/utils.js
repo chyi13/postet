@@ -7,25 +7,27 @@ import JSON5 from "json5";
  * @param data
  * @returns {Promise}
  */
-export async function fetchByCrossRequest(url, method = 'GET', headers = {}, data = {}) {
-    console.log('data', data)
+export async function fetchByCrossRequest(url, method = 'GET', headers = {}, data) {
     let request = {
         url,
         method,
         headers,
     }
-    if (method == 'POST') {
-        request = {
-            ...request,
-            data,
-        }
-    } else if (method === 'GET'){
-        request = {
-            ...request,
-            query: data,
-        }
+    console.log('cross request url', url)
+    if (!isEmptyObj(data)) {
+      if (method == 'POST' || method === 'PUT') {
+          request = {
+              ...request,
+              data,
+          }
+      } else if (method === 'GET') {
+          request = {
+              ...request,
+              query: data,
+          }
+      }
     }
-    console.log('request', request);
+    
     return new Promise(function(resolve, reject){
         crossRequest({
             ...request,
@@ -155,4 +157,33 @@ export function mergeParams(newParams, oldParams) {
         }
     }
     return result;
+}
+
+export function formatQuery(query) {
+  let result = '';
+  if (query) {
+    result = Object.entries(query)
+              .filter(item => item[0] && item[1])
+              .map(pair => pair.map(encodeURIComponent).join('='))
+              .join('&');
+  }
+  return result;
+}
+
+/**
+ * 从url中解析出query字段
+ */
+export function extractParams(url) {
+  let result = [];
+  if (url) {
+    const urlObj = new URL(url);
+    urlObj.searchParams.forEach((value, key) => {
+      result.push({key, value});
+    })
+  }
+  return result;
+}
+
+export function isEmptyObj(obj) {
+  return Object.entries(obj).length === 0 && obj.constructor === Object
 }

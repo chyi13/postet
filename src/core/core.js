@@ -1,5 +1,5 @@
 import { TEST_API_URL, TEST_CASES_URL, COMMON_HEADERS_URL, COMMON_PARAMS_URL, COMMON_VALID_URL, SETUP_URL, TEARDOWN_URL, REQUEST_SUCCESS, REQUEST_FAILED } from '../constants';
-import { fetchByAjax, fetchByCrossRequest } from '../utils';
+import { fetchByAjax, fetchByCrossRequest, formatQuery } from '../utils';
 
 /**
  * fetch test cases by api id
@@ -7,11 +7,11 @@ import { fetchByAjax, fetchByCrossRequest } from '../utils';
  */
 export async function fetchAPICases(apiId) {
     let apiCases = [];
-    let pageId = 0;
+    let pageId = 1;
     let url = TEST_CASES_URL;
     while(true) {
         try {
-            url = TEST_CASES_URL + '?api=' + apiId + '&page_size=500&pageId=' + pageId;
+            url = TEST_CASES_URL + '?api=' + apiId + '&page_size=500&page=' + pageId;
             const {status, body} = await fetchDelegate(url);
             if (status === REQUEST_SUCCESS && Array.isArray(body.results)) {
                 apiCases = apiCases.concat(body.results);
@@ -53,27 +53,45 @@ export async function createApi({valid, header, param, name, url, stag_url, onli
 /**
  * create new api case
  */
-export async function createApiCase({valid, header, param, name, api, setup_suite, teardown}) {
+export async function createApiCase({valid, header, param, name, api, setup_suite, teardown, method}) {
     let result = {
       status: REQUEST_FAILED,
     }
-    if (name && api && setup_suite && teardown) {
+    if (name && api && setup_suite && teardown && method) {
         let postURL = TEST_CASES_URL;
         result = await fetchDelegate(postURL, 'POST', 
             {  
                 'Content-Type': 'application/json'
             },
             {
-                valid, header, param, name, api, setup_suite: Number(setup_suite), teardown: Number(teardown),
+                valid, header, param, name, api, setup_suite: Number(setup_suite), teardown: Number(teardown), method
             }
         );
     }
     return result;
 } 
 
+/**
+ * update api case
+ */
+export async function updateApiCase({api, name, headers, param, setup_suite, teardown, valid, id, method}) {
+  let result = {
+    status: REQUEST_FAILED,
+  }
+  if (id && name && api) {
+    let postURL = TEST_CASES_URL + id + '/';
+    result = await fetchDelegate(postURL, 'PUT', {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }, {
+      api, name, headers, param, setup_suite, teardown, valid, id, method
+    });
+  }
+  return result;
+}
+
 export async function fetchSetup() {
     let setup = [];
-    let pageId = 0;
+    let pageId = 1;
     let url = SETUP_URL;
     while(true) {
         try {
@@ -97,7 +115,7 @@ export async function fetchSetup() {
 
 export async function fetchTeardown() {
     let teardown = [];
-    let pageId = 0;
+    let pageId = 1;
     let url = TEARDOWN_URL;
     while(true) {
         try {
@@ -251,7 +269,6 @@ async function fetchDelegate(url, method = 'GET', headers = {}, data = {}) {
           }
         }
     } catch(e) {
-      console.log(e)
         return {
           status: REQUEST_FAILED,
         }

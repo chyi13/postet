@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://172.19.80.91:12303/';
+export const BASE_URL = 'http://172.19.80.91:12303';
+
 export const TEST_API_URL = BASE_URL + '/case/api/';
 export const TEST_CASES_URL = BASE_URL + '/case/apicase/';
 export const COMMON_HEADERS_URL = BASE_URL + '/case/common/header/';
