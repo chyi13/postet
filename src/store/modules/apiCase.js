@@ -1,10 +1,10 @@
 import {
-    TYPE_NONE, TYPE_ADD, TYPE_EDIT, TYPE_DELETE,
+    MODE_NONE, MODE_ADD, MODE_EDIT, MODE_DELETE,
 } from "../../constants";
 
 const apiCase = {
     state: {
-        type: TYPE_NONE,
+        type: MODE_NONE,
     },
     mutations: {
         UPDATE_EDIT_TYPE(state, type) {

@@ -1,17 +1,17 @@
 import {
     MODAL_TYPE_API, MODAL_TYPE_API_CASE, MODAL_TYPE_NONE,
-    TYPE_NONE, TYPE_ADD, TYPE_EDIT, TYPE_DELETE,
+    MODE_NONE, MODE_ADD, MODE_EDIT, MODE_DELETE,
     WAITINGFOR_TYPE_INFO,
     REQUEST_SUCCESS, REQUEST_FAILED, 
 } from "../../constants";
-import {createApi, deleteTestApi, createApiCase, updateApiCase} from "../../core/core";
+import {createApi, updateApi, deleteTestApi, createApiCase, updateApiCase} from "../../core/core";
 import {stringifyHeaderOrParam} from "../../utils";
 
 const api = {
   state: {
     showModal: false,
     modalType: MODAL_TYPE_NONE,
-    type: TYPE_NONE,
+    modalMode: MODE_NONE,
   },
   mutations: {
     SHOW_MODAL(state, type) {
@@ -24,14 +24,14 @@ const api = {
       state.showModal = false;
       state.modalType = MODAL_TYPE_NONE;
     },
-    UPDATE_TYPE(state, type) {
-      state.type = type;
+    UPDATE_MODAL_MODE(state, modalMode) {
+      state.modalMode = modalMode;
     }
   },
   actions: {
     ADD_NEW_API({state, commit}) {
       commit('SHOW_MODAL', MODAL_TYPE_API);
-      commit('UPDATE_TYPE', TYPE_ADD);
+      commit('UPDATE_MODAL_MODE', MODE_ADD);
     },
     async SAVE_NEW_API({state, commit, dispatch, rootState}, newApiData) {
       // 1. 展示进度条
@@ -51,11 +51,31 @@ const api = {
         bootbox.alert('创建失败: ' + JSON.stringify(resultBody));
       }
     },
+    async SAVE_OLD_API({state, commit, dispatch}, oldApiData) {
+      // 1. 展示进度条
+      commit('SHOW_WAITING', {type: WAITINGFOR_TYPE_INFO, text: 'Saving...'}, {root: true});
+      const {id, valid, header, param, name, url, stag_url, online_url, setup_suite = null} = oldApiData;
+      // 2. 发送请求
+      const {status, header: resultHeader, body: resultBody} = await updateApi({id, valid, header, param, name, url, stag_url, online_url, setup_suite});
+      commit('HIDE_WAITING', {}, {root: true});
+      // 3. 保存请求结果
+      if (status === REQUEST_SUCCESS) {
+        commit('HIDE_MODAL');
+        // 4. 刷新api
+        dispatch("UPDATE_APIS");
+        // 5. 提示
+        bootbox.alert('更新成功');
+      } else {
+        bootbox.alert('更新失败: ' + JSON.stringify(resultBody));
+      }
+    },
     async DELETE_API({state, commit}, apiToDelete) {
       deleteTestApi(apiToDelete.id);
     },
-    async EDIT_API({state, commit}, api) {
+    async EDIT_API({state, commit, dispatch}, api) {
+      await dispatch("UPDATE_SELECTED_API", api, {root: true});
       commit('SHOW_MODAL', MODAL_TYPE_API);
+      commit('UPDATE_MODAL_MODE', MODE_EDIT);
     },
     async ADD_NEW_API_CASE({state, commit}) {
       commit('SHOW_MODAL', MODAL_TYPE_API_CASE);

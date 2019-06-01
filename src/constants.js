@@ -13,10 +13,10 @@ export const MODAL_TYPE_NONE = '';
 export const MODAL_TYPE_API = 'modalApi';
 export const MODAL_TYPE_API_CASE = 'modalApiCase';
 
-export const TYPE_NONE = '';
-export const TYPE_ADD = 'add';
-export const TYPE_EDIT = 'edit';
-export const TYPE_DELETE = 'delete';
+export const MODE_NONE = '';
+export const MODE_ADD = 'add';
+export const MODE_EDIT = 'edit';
+export const MODE_DELETE = 'delete';
 
 export const REQUEST_SUCCESS = 'success';
 export const REQUEST_FAILED = 'fail';

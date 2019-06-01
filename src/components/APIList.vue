@@ -34,24 +34,42 @@
       <div class="bg-white py-2 collapse-inner">
         <div
           class="list_item_inner"
-          @mouseover="onAPIHover(item)"
           @click="onAPIClicked(item)"
-        ><span class="d-inline-block text-truncate" :class="{'max_width_hover': item.hover, 'max_width': !item.hover}">{{item.name}}</span>
+          @contextmenu.prevent="$refs.menu.open($event, item)"
+        ><span class="d-inline-block text-truncate max_width">{{item.name}}</span>
         </div>
       </div>
     </li>
+   <vue-context ref="menu" @close="onContextMenuClose" @open="onContextMenuOpen">
+      <template slot-scope="child" v-if="child.data">
+        <li>
+          <a href="#" @click.prevent="editApi(child.data)">
+             编辑
+          </a>
+        </li>
+        <li>
+          <a href="#" @click.prevent="deleteApi(child.data)">
+             删除
+          </a>
+        </li>
+      </template>
+    </vue-context>
   </ul>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
+import { VueContext } from 'vue-context';
+
 export default {
   name: "api-list",
+  components: { VueContext },
   data() {
     return {
       apiSearchInput: "",
-      apiIdsDummy: []
+      apiIdsDummy: [],
+      isContextMenuShowing: false,
     };
   },
   computed: {
@@ -80,14 +98,13 @@ export default {
             document.getElementById("api_edit_header_name").scrollIntoView();
       })
     },
-    onAPIHover(hoverItem) {
-      this.apiIdsDummy = this.apiIdsDummy.map(item => {
-        return {
-          ...item,
-          hover: item.id === hoverItem.id
-        };
-      });
+    onContextMenuOpen() {
+      this.isContextMenuShowing = true;
     },
+    onContextMenuClose() {
+      this.isContextMenuShowing = false;
+    },
+    
     onSearchInputChange() {
       if (this.apiSearchInput) {
         this.apiIdsDummy = this.apis.filter(
@@ -103,8 +120,11 @@ export default {
       this.$store.dispatch("ADD_NEW_API");
     },
     editApi(item) {
-      this.$store.dispatch("DELETE_API", item);
-    }
+      this.$store.dispatch("EDIT_API", item);
+    },
+    deleteApi(item) {
+      console.log('delete does not support currently');
+    },
   }
 };
 </script>
@@ -121,7 +141,7 @@ export default {
   color: #3a3b45;
   white-space: nowrap;
   font-size: 0.85rem;
-  
+
 }
 .list_item_inner:hover {
   background-color: #eaecf4;
@@ -130,7 +150,5 @@ export default {
 .max_width {
   max-width: 13rem;
 }
-.max_width_hover {
-  max-width: 11rem;
-}
+
 </style>

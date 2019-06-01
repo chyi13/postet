@@ -33,42 +33,60 @@ export async function fetchAPICases(apiId) {
  * create new api
  */
 export async function createApi({valid, header, param, name, url, stag_url, online_url, setup_suite}) {
-    let result = {
-      status: REQUEST_FAILED,
-    }
-    if (valid && header && param && name && url && stag_url && online_url) {
-        let postURL = TEST_API_URL;
-        result = await fetchDelegate(postURL, 'POST', 
-            {  
-                'Content-Type': 'application/json'
-            },
-            {
-                valid, header, param, name, url, stag_url, online_url, setup_suite: Number(setup_suite)
-            }
-        );
-    }
-    return result;
+  let result = {
+    status: REQUEST_FAILED,
+  }
+  if (valid && header && param && name && url && stag_url && online_url) {
+    let postURL = TEST_API_URL;
+    result = await fetchDelegate(postURL, 'POST', 
+        {  
+            'Content-Type': 'application/json'
+        },
+        {
+            valid, header, param, name, url, stag_url, online_url, setup_suite: Number(setup_suite)
+        }
+    );
+  }
+  return result;
+}
+
+/**
+ * update old api
+ */
+export async function updateApi({id, valid, header, param, name, url ,stag_url, online_url, setup_suite}) {
+  let result = {
+    status: REQUEST_FAILED,
+  }
+  if (id && name && url && stag_url && online_url) {
+    let postURL = TEST_API_URL + id + '/';
+    result = await fetchDelegate(postURL, 'PUT', {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }, {
+      name, url, stag_url, online_url, valid, header, param, setup_suite,
+    });
+  }
+  return result;
 }
 
 /**
  * create new api case
  */
 export async function createApiCase({valid, header, param, name, api, setup_suite, teardown, method}) {
-    let result = {
-      status: REQUEST_FAILED,
-    }
-    if (name && api && setup_suite && teardown && method) {
-        let postURL = TEST_CASES_URL;
-        result = await fetchDelegate(postURL, 'POST', 
-            {  
-                'Content-Type': 'application/json'
-            },
-            {
-                valid, header, param, name, api, setup_suite: Number(setup_suite), teardown: Number(teardown), method
-            }
-        );
-    }
-    return result;
+  let result = {
+    status: REQUEST_FAILED,
+  }
+  if (name && api && setup_suite && teardown && method) {
+    let postURL = TEST_CASES_URL;
+    result = await fetchDelegate(postURL, 'POST', 
+      {  
+          'Content-Type': 'application/json'
+      },
+      {
+          valid, header, param, name, api, setup_suite: Number(setup_suite), teardown: Number(teardown), method
+      }
+    );
+  }
+  return result;
 } 
 
 /**

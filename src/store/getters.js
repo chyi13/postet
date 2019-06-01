@@ -18,6 +18,17 @@ const getters = {
     })[0];
   },
   commonValid: state => state.core.commonValid,
+  defaultCommonValid: state => {
+    const {commonValid = []} = state.core;
+    let result = commonValid.filter((item) => {
+      return (item.id === 1)
+    });
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0];
+    } else {
+      return null
+    }
+  },
   selectedCommonHeaders: state => state.core.selectedCommonHeaders,
   selectedCommonParams: state => state.core.selectedCommonParams,
   setup: state => state.core.setup,
@@ -39,7 +50,8 @@ const getters = {
   resultHeaders: state => state.run.headers,
   resultBody: state => state.run.body,
   showAddModal: state => state.api.showModal,
-  addModalType: state => state.api.modalType,
+  modalType: state => state.api.modalType,
+  modalMode: state => state.api.modalMode,
 };
 
 export default getters

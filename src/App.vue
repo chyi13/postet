@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-    <add-or-update-api v-if="addModalType === 'modalApi'"></add-or-update-api>
-    <add-or-update-api-case v-else-if="addModalType === 'modalApiCase'"></add-or-update-api-case>
+    <add-or-update-api v-if="modalType === 'modalApi'"></add-or-update-api>
+    <add-or-update-api-case v-else-if="modalType === 'modalApiCase'"></add-or-update-api-case>
   </div>
 </template>
 <script>
@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapGetters([
       "selectedApi",
-      "addModalType",
+      "modalType",
     ])
   },
   data() {

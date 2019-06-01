@@ -6,7 +6,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">添加新的API</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                 @click="onBackdropClicked">
                             <span aria-hidden="true">&times;</span>
@@ -130,11 +130,14 @@
   import {mapGetters} from 'vuex';
   import {checkIfUrl} from "../utils";
 
+  import {MODE_ADD, MODE_EDIT} from '../constants';
+  
   export default {
     name: "add-or-update-api",
     props: {},
     data() {
       return {
+        apiId: -1,
         apiNameVal: '',
         apiNameValid: -1,
         apiUrlVal: '',
@@ -148,48 +151,28 @@
     computed: {
       ...mapGetters([
         'showAddModal',
+        'modalType',
+        'modalMode',
         'commonHeaders',
         'defaultCommonHeader',
         'commonParams',
         'defaultCommonParam',
         'commonValid',
+        'defaultCommonValid',
         'setup',
         'defaultSetup',
+        'selectedApi',
       ]),
+      modalTitle() {
+        return this.modalMode === MODE_ADD ? '添加新的API': '编辑API';
+      }
     },
     watch: {
-        commonHeaders: {
-            immediate: true,
-            handler: function(val) {
-              this.$nextTick(() => {
-                $("#commonHeaderSelector").selectpicker("val", this.defaultCommonHeader.id);
-              });
-              
-            }
-        },
-        commonParams: {
-            immediate: true,
-            handler: function(val) {
-              this.$nextTick(() => {
-                $("#commonParamSelector").selectpicker("val", this.defaultCommonParam.id);
-              })
-            }
-        },
-        commonValid: {
-            immediate: true,
-            handler: function(val) {
-              this.$nextTick(() => {
-                $("#commonValidSelector").selectpicker("refresh");
-              });
-            }
-        },
-        setup: {
-            immediate: true,
-            handler: function(val) {
-              this.$nextTick(() => {
-                $("#setupSelector").selectpicker("val", this.defaultSetup.id); 
-              });
-            }
+        selectedApi: {
+          immediate: true,
+          handler: function(val = {}) {
+            
+          }
         },
         apiNameVal: {
             handler: function(val) {
@@ -233,25 +216,59 @@
         this.$store.commit('HIDE_MODAL');
       },
       save() {
-        this.$store.dispatch('SAVE_NEW_API', {
-          name: this.apiNameVal,
-          url: this.apiUrlVal,
-          stag_url: this.apiStageUrlVal,
-          online_url: this.apiOnlineUrlVal,
-          param: $("#commonParamSelector").val(),
-          header: $("#commonHeaderSelector").val(),
-          valid: $("#commonValidSelector").val(),
-          setup_suite: $("#setupSelector").val(),
-        });
+        if (this.modalMode === MODE_ADD) {
+          this.$store.dispatch('SAVE_NEW_API', {
+            name: this.apiNameVal,
+            url: this.apiUrlVal,
+            stag_url: this.apiStageUrlVal,
+            online_url: this.apiOnlineUrlVal,
+            param: $("#commonParamSelector").val(),
+            header: $("#commonHeaderSelector").val(),
+            valid: $("#commonValidSelector").val(),
+            setup_suite: $("#setupSelector").val(),
+          });
+        } else if (this.modalMode === MODE_EDIT) {
+          this.$store.dispatch('SAVE_OLD_API', {
+            id: this.apiId,
+            name: this.apiNameVal,
+            url: this.apiUrlVal,
+            stag_url: this.apiStageUrlVal,
+            online_url: this.apiOnlineUrlVal,
+            param: $("#commonParamSelector").val(),
+            header: $("#commonHeaderSelector").val(),
+            valid: $("#commonValidSelector").val(),
+            setup_suite: $("#setupSelector").val(),
+          });
+        }
       }
     },
     mounted() {
-        this.$nextTick(() => {
-            $("#commonHeaderSelector").selectpicker();
-            $("#commonParamSelector").selectpicker();
-            $("#commonValidSelector").selectpicker();
-            $("#setupSelector").selectpicker();
-        });
+      if (this.modalMode === MODE_EDIT) {
+        const {id, name, url, stag_url, online_url} = this.selectedApi;
+        this.apiId = id;
+        this.apiNameVal = name;
+        this.apiUrlVal = url;
+        this.apiStageUrlVal = stag_url;
+        this.apiOnlineUrlVal = online_url;
+      }
+      this.$nextTick(() => {
+          $("#commonHeaderSelector").selectpicker();            
+          $("#commonParamSelector").selectpicker();      
+          $("#commonValidSelector").selectpicker();      
+          $("#setupSelector").selectpicker();
+          if (this.modalMode === MODE_ADD) {
+            $("#commonHeaderSelector").selectpicker("val", this.defaultCommonHeader.id);
+            $("#commonParamSelector").selectpicker("val", this.defaultCommonParam.id);
+            $("#commonValidSelector").selectpicker("val", this.defaultCommonValid.id);
+            $("#setupSelector").selectpicker("val", this.defaultSetup.id);
+          } else if (this.modalMode === MODE_EDIT){
+            const {header, param, valid, setup_suite} = this.selectedApi;
+            $("#commonHeaderSelector").selectpicker("val", header);
+            $("#commonParamSelector").selectpicker("val", param);
+            $("#commonValidSelector").selectpicker("val", valid);
+            $("#setupSelector").selectpicker("val", setup_suite);
+          }
+      });
     }
   };
 </script>
